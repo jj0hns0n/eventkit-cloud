@@ -5,8 +5,9 @@ node('sl61') {
   stage 'Test'
   sh """
   pip install --user virtualenv
-  ~/.local/bin/virtualenv --no-site-packages $HOME
+  ~/.local/bin/virtualenv --no-site-packages "$HOME"
+  ls -a ~/
   pip install docker-compose
-  ~/.local/bin/docker-compose --help
+  docker-compose --help
   """
 }
