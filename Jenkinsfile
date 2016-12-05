@@ -4,10 +4,7 @@ node('sl61') {
 
   stage 'Test'
   sh """
-  pip install -U virtualenv
-  cd ~
-  virtualenv .
-  pip install --user docker-compose
-  docker-compose --help
+  pip install --user virtualenv
+  ~/.local/bin/virtualenv
   """
 }
