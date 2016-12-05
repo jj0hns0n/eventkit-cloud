@@ -8,6 +8,6 @@ node('sl61') {
   ~/.local/bin/virtualenv --no-site-packages "$HOME"
   source ~/bin/activate
   pip install docker-compose
-  docker-compose --help
+  docker-compose build
   """
 }
