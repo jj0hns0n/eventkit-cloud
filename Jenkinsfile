@@ -9,7 +9,7 @@ node('sl61') {
   source ~/bin/activate
   pip install docker-compose
   docker-compose down
-  docker-compose rm
+  docker-compose rm -f
   docker-compose build
   docker-compose run --entrypoint "sh /var/lib/eventkit/scripts/unit-test-entrypoint.sh" eventkit
   """
