@@ -11,6 +11,6 @@ node('sl61') {
   docker-compose down
   docker-compose rm -f
   docker-compose build
-  docker-compose run --entrypoint "sh /var/lib/eventkit/scripts/unit-test-entrypoint.sh" eventkit
+  docker-compose run --entrypoint "ls /var/lib/eventkit/scripts/" eventkit
   """
 }
