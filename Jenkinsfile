@@ -4,6 +4,6 @@ node {
 
   stage 'Test'
   sh """
-  docker pull docker/compose
+  docker pull docker/compose:1.8.0
   """
 }
