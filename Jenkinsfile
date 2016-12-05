@@ -4,6 +4,6 @@ node {
 
   stage 'Test'
   sh """
-  docker run -v /var/run/docker.sock:/var/run/docker.sock -e SITE_NAME="cloud.eventkit.dev" -e DEBUG="True" -e DEVELOPMENT="True" -e SITE_IP="192.168.99.130" -v "\$(pwd)":"\$(pwd)" --workdir="\$(pwd)" -e COMPOSE_PROJECT_NAME="eventkit-cloud" dduportal/docker-compose:latest run --entrypoint=/usr/local/bin/docker --help
+  docker run -v /var/run/docker.sock:/var/run/docker.sock -e SITE_NAME="cloud.eventkit.dev" -e DEBUG="True" -e DEVELOPMENT="True" -e SITE_IP="192.168.99.130" -v "\$(pwd)":"\$(pwd)" --workdir="\$(pwd)" -e COMPOSE_PROJECT_NAME="eventkit-cloud" dduportal/docker-compose:latest up
   """
 }
