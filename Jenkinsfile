@@ -10,7 +10,7 @@ node('sl61') {
   pip install docker-compose
   docker-compose down
   docker-compose rm -f
-  docker-compose build
+  docker-compose build --no-cache --force-rm
   docker-compose run --rm --entrypoint "ls /var/lib/eventkit/scripts/" eventkit
   """
 }
