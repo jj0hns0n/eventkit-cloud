@@ -5,6 +5,6 @@ node('sl61') {
   stage 'Test'
   sh """
   pip install --user virtualenv
-  ~/.local/bin/virtualenv
+  ~/.local/bin/virtualenv --no-site-packages $HOME
   """
 }
