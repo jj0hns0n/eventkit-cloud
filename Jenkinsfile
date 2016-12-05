@@ -1,5 +1,7 @@
 node {
-    stage('test') {
-        sh 'docker-compose build'
-    }
+  stage 'Checkout'
+  checkout scm
+
+  stage 'Test'
+  sh 'docker-compose build'
 }
