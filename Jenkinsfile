@@ -1,5 +1,5 @@
 node {
-    stage('build') {
-        sh "docker-compose build"
+    stage('build docker') {
+        sh 'docker-compose build'
     }
 }
