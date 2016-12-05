@@ -5,6 +5,6 @@ node('sl61') {
   stage 'Test'
   sh """
   pip install --user docker-compose
-  ls ~/.local/bin
+  ~/.local/bin/docker-compose
   """
 }
