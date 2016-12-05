@@ -4,7 +4,7 @@ node {
 
   stage 'Test'
   sh """
-  curl -L 'https://github.com/docker/compose/releases/download/1.9.0/run.sh' > run.sh; chmod +x run.sh;
+  curl -L 'https://raw.githubusercontent.com/docker/compose/master/script/run/run.sh' > run.sh; chmod +x run.sh;
   ./run.sh build;
   """
 }
