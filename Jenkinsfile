@@ -5,7 +5,7 @@ node {
   stage 'Test'
   sh """
   docker pull docker/compose:1.8.0;
-  echo \$(env | grep DOCKER);
+  env;
   docker run -v "\$(pwd)":/opt/eventkit-cloud docker/compose:1.8.0 --file /opt/eventkit-cloud/docker-compose.yml build
   """
 }
