@@ -6,7 +6,7 @@ node('sl61') {
   sh """
   pip install --user virtualenv
   ~/.local/bin/virtualenv --no-site-packages "$HOME"
-  ~/bin/activate
+  source ~/bin/activate
   pip install docker-compose
   docker-compose --help
   """
