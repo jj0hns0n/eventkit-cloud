@@ -91,6 +91,7 @@ EXPOSE 80
 #RUN /var/lib/eventkit/.virtualenvs/eventkit/bin/python /var/lib/eventkit/manage.py makemigrations
 
 COPY ./scripts /var/lib/eventkit/scripts
+RUN chmod 775 /var/lib/eventkit/scripts/*
 
 ENTRYPOINT ["sh", "/var/lib/eventkit/scripts/wait-for-postgis.sh", "postgres://eventkit:eventkit_exports@postgis:5432/eventkit_exports"]
 CMD ["echo", "Override this command in the docker-compose.yaml"]
