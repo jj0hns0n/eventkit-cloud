@@ -12,6 +12,6 @@ node('sl61') {
   docker-compose rm -f
   docker-compose build --no-cache --force-rm
   docker-compose run --entrypoint "ls /var/lib/eventkit/scripts" eventkit
-  docker-compose run --rm --entrypoint "sh /var/lib/eventkit/scripts/unit-test-entrypoint.sh" eventkit
+  docker-compose run --rm --entrypoint "/bin/bash /var/lib/eventkit/scripts/unit-test-entrypoint.sh" eventkit
   """
 }
