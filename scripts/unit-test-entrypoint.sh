@@ -1,6 +1,6 @@
 #!/bin/bash
 cd /var/lib/eventkit
-
+unset PRODUCTION
 env
 
 /var/lib/eventkit/.virtualenvs/eventkit/bin/python /var/lib/eventkit/manage.py collectstatic --noinput
