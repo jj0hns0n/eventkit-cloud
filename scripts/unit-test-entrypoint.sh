@@ -1,6 +1,14 @@
 #!/bin/bash
+source /var/lib/eventkit/scripts/bootstrap.sh
+
 cd /var/lib/eventkit
+source /usr/local/bin/virtualenvwrapper.sh
+workon eventkit
+
 unset PRODUCTION
+export WORKON_HOME=/var/lib/eventkit/.virtualenvs
+export PROJECT_HOME=/var/lib/eventkit
+
 env
 
 /var/lib/eventkit/.virtualenvs/eventkit/bin/python /var/lib/eventkit/manage.py collectstatic --noinput
