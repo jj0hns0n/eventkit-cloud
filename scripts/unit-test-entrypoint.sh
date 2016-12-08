@@ -1,15 +1,13 @@
 #!/bin/bash
-source /var/lib/eventkit/scripts/bootstrap.sh
-
 cd /var/lib/eventkit
-source /usr/local/bin/virtualenvwrapper.sh
-workon eventkit
+source /var/lib/eventkit/.virtualenvs/eventkit/bin/activate
 
 unset PRODUCTION
 export WORKON_HOME=/var/lib/eventkit/.virtualenvs
 export PROJECT_HOME=/var/lib/eventkit
 
 env
+ls eventkit_cloud/settings/
 
 /var/lib/eventkit/.virtualenvs/eventkit/bin/python /var/lib/eventkit/manage.py collectstatic --noinput
 /var/lib/eventkit/.virtualenvs/eventkit/bin/python /var/lib/eventkit/manage.py migrate
