@@ -5,7 +5,7 @@ source /var/lib/eventkit/.virtualenvs/eventkit/bin/activate
 unset PRODUCTION
 export WORKON_HOME=/var/lib/eventkit/.virtualenvs
 export PROJECT_HOME=/var/lib/eventkit
-
+whoami
 env
 ls -l
 ls eventkit_cloud 
