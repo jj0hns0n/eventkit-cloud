@@ -7,6 +7,8 @@ export WORKON_HOME=/var/lib/eventkit/.virtualenvs
 export PROJECT_HOME=/var/lib/eventkit
 
 env
+ls 
+ls eventkit_cloud 
 ls eventkit_cloud/settings/
 
 /var/lib/eventkit/.virtualenvs/eventkit/bin/python /var/lib/eventkit/manage.py collectstatic --noinput
