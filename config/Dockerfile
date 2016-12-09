@@ -80,7 +80,9 @@ RUN mkdir /var/log/eventkit
 
 RUN chmod 755 /home
 RUN chmod 755 /var/lib/eventkit
-RUN chmod 755 /var/lib/eventkit
+RUN chmod 775 -R /var/lib/eventkit
+RUN chmod 775 -R /var/lib/eventkit/eventkit_cloud
+RUN chmod 775 -R /var/lib/eventkit/eventkit_cloud/settings
 RUN chmod 775 /var/log/eventkit
 RUN chown -R eventkit:eventkit /var/lib/eventkit /var/log/eventkit
 
