@@ -79,6 +79,8 @@ RUN chown eventkit:eventkit -R /var/lib/eventkit/
 RUN mkdir /var/log/eventkit
 
 RUN chmod 755 /home
+
+RUN chown -R eventkit:eventkit /var/log/eventkit /var/lib/eventkit
 RUN chmod 755 /var/lib/eventkit
 RUN chmod 775 -R /var/lib/eventkit
 RUN chmod 775 -R /var/lib/eventkit/eventkit_cloud
@@ -97,4 +99,3 @@ RUN chmod 775 /var/lib/eventkit/scripts/*
 
 ENTRYPOINT ["sh", "/var/lib/eventkit/scripts/wait-for-postgis.sh", "postgres://eventkit:eventkit_exports@postgis:5432/eventkit_exports"]
 CMD ["echo", "Override this command in the docker-compose.yaml"]
-
