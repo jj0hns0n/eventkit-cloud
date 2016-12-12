@@ -45,7 +45,8 @@ RUN apt-get -y install python-pip
 RUN pip install virtualenv
 RUN virtualenv /var/lib/eventkit/.virtualenvs/eventkit
 
-RUN apt-get -y install git libpq-dev python-dev gcc g++ software-properties-common
+RUN apt-get -y install python-dev 
+RUN apt-get -y install git libpq-dev gcc g++ software-properties-common
 RUN git clone https://gitlab.com/osm-c-tools/osmctools.git /var/lib/eventkit/osmctools
 RUN gcc /var/lib/eventkit/osmctools/src/osmupdate.c -o /var/lib/eventkit/osmctools/osmupdate
 RUN gcc /var/lib/eventkit/osmctools/src/osmfilter.c -O3 -o /var/lib/eventkit/osmctools/osmfilter
