@@ -87,6 +87,7 @@ RUN chmod 775 -R /var/lib/eventkit/eventkit_cloud
 RUN chmod 775 -R /var/lib/eventkit/eventkit_cloud/settings
 RUN chmod 775 /var/log/eventkit
 RUN chown -R eventkit:eventkit /var/lib/eventkit /var/log/eventkit
+RUN echo ls -l > /var/lib/eventkit/ls.out
 
 EXPOSE 80
 #RUN rm -rf /var/lib/eventkit/tmp
