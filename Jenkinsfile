@@ -4,7 +4,6 @@ node('sl61') {
 
   stage 'Test'
   sh """
-  apt-get install -y python-dev
   pip install --user virtualenv
   ~/.local/bin/virtualenv --no-site-packages "$HOME"
   source ~/bin/activate
