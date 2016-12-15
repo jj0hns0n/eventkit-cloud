@@ -45,7 +45,8 @@ RUN apt-get -y install python-pip
 RUN pip install virtualenv
 RUN virtualenv /var/lib/eventkit/.virtualenvs/eventkit
 
-RUN apt-get -y install git libpq-dev python-dev gcc g++ software-properties-common
+RUN apt-get -y install python-dev 
+RUN apt-get -y install git libpq-dev gcc g++ software-properties-common
 RUN git clone https://gitlab.com/osm-c-tools/osmctools.git /var/lib/eventkit/osmctools
 RUN gcc /var/lib/eventkit/osmctools/src/osmupdate.c -o /var/lib/eventkit/osmctools/osmupdate
 RUN gcc /var/lib/eventkit/osmctools/src/osmfilter.c -O3 -o /var/lib/eventkit/osmctools/osmfilter
@@ -79,10 +80,15 @@ RUN chown eventkit:eventkit -R /var/lib/eventkit/
 RUN mkdir /var/log/eventkit
 
 RUN chmod 755 /home
+
+RUN chown -R eventkit:eventkit /var/log/eventkit /var/lib/eventkit
 RUN chmod 755 /var/lib/eventkit
-RUN chmod 755 /var/lib/eventkit
+RUN chmod 775 -R /var/lib/eventkit
+RUN chmod 775 -R /var/lib/eventkit/eventkit_cloud
+RUN chmod 775 -R /var/lib/eventkit/eventkit_cloud/settings
 RUN chmod 775 /var/log/eventkit
 RUN chown -R eventkit:eventkit /var/lib/eventkit /var/log/eventkit
+RUN echo ls -l > /var/lib/eventkit/ls.out
 
 EXPOSE 80
 #RUN rm -rf /var/lib/eventkit/tmp
@@ -91,7 +97,7 @@ EXPOSE 80
 #RUN /var/lib/eventkit/.virtualenvs/eventkit/bin/python /var/lib/eventkit/manage.py makemigrations
 
 COPY ./scripts /var/lib/eventkit/scripts
+RUN chmod 775 /var/lib/eventkit/scripts/*
 
 ENTRYPOINT ["sh", "/var/lib/eventkit/scripts/wait-for-postgis.sh", "postgres://eventkit:eventkit_exports@postgis:5432/eventkit_exports"]
 CMD ["echo", "Override this command in the docker-compose.yaml"]
-
