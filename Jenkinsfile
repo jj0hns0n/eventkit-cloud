@@ -4,6 +4,6 @@ node('sl61') {
 
   stage 'Test'
   sh """
-  docker rmi zrununittests_eventkit
+  docker rmi 785283cf3ffc
   """
 }
