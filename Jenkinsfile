@@ -4,6 +4,6 @@ node('sl61') {
 
   stage 'Test'
   sh """
-  docker rmi 785283cf3ffc
+  docker rmi -f 785283cf3ffc
   """
 }
