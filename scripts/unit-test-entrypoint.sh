@@ -1,4 +1,6 @@
 #!/bin/bash
+echo "test"
+
 cd /var/lib/eventkit
 source /var/lib/eventkit/.virtualenvs/eventkit/bin/activate
 
