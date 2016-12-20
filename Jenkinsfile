@@ -8,6 +8,8 @@ node('sl61') {
   ~/.local/bin/virtualenv --no-site-packages "$HOME"
   source ~/bin/activate
   pip install docker-compose
+  pwd
+  ls
   docker-compose --file docker-compose-test.yml down
   docker-compose --file docker-compose-test.yml rm -f
   docker-compose --file docker-compose-test.yml build --no-cache --force-rm
