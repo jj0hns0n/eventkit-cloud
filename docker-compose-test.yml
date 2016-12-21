@@ -5,7 +5,7 @@ services:
        - ./exports_download:/var/lib/eventkit/exports_download
      build:
        context: .
-       dockerfile: config/Dockerfile_test
+       dockerfile: config/Dockerfile
      working_dir: /var/lib/eventkit
      user: eventkit
      environment:
