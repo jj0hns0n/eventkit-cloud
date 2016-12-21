@@ -12,6 +12,6 @@ node('sl61') {
   docker-compose --file docker-compose-test.yml down
   docker-compose --file docker-compose-test.yml rm -f
   docker-compose --file docker-compose-test.yml build --no-cache --force-rm
-  docker-compose --file docker-compose-test.yml run --rm -e DEBUG=True -e DEVELOPMENT=True --entrypoint "ls -l /var/lib/eventkit" eventkit
+  docker-compose --file docker-compose-test.yml run --rm -e DEBUG=True -e DEVELOPMENT=True --entrypoint "/bin/ls" eventkit -l /var/lib/eventkit
   """
 }
