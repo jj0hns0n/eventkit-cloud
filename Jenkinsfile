@@ -9,7 +9,7 @@ node('sl61') {
   source ~/bin/activate
   pip install docker-compose
   docker images
-  docker images -q |xargs docker rmi
+  docker rmi -f $(docker images | grep "<none>" | awk "{print \$3}")
   docker images
   docker-compose --file docker-compose-test.yml down
   docker-compose --file docker-compose-test.yml rm -f
