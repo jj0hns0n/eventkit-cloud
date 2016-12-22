@@ -5,7 +5,7 @@ cd /var/lib/eventkit
 source /var/lib/eventkit/.virtualenvs/eventkit/bin/activate
 
 unset PRODUCTION
-export DATABASE_URL=DATABASE_URL=postgis://eventkit:eventkit_exports@postgis:5432/eventkit_exports
+export DATABASE_URL=postgis://eventkit:eventkit_exports@postgis:5432/eventkit_exports
 export BROKER_URL=amqp://guest:guest@rabbitmq:5672/
 export C_FORCE_ROOT=True
 export EXPORT_DOWNLOAD_ROOT=/var/lib/eventkit/exports_download
