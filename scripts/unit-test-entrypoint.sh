@@ -27,4 +27,4 @@ cat /var/lib/eventkit/ls.out
 /var/lib/eventkit/.virtualenvs/eventkit/bin/python /var/lib/eventkit/manage.py loaddata /var/lib/eventkit/eventkit_cloud/fixtures/insert_provider_types.json
 /var/lib/eventkit/.virtualenvs/eventkit/bin/python /var/lib/eventkit/manage.py loaddata /var/lib/eventkit/eventkit_cloud/fixtures/osm_provider.json
 
-/var/lib/eventkit/.virtualenvs/eventkit/bin/python manage.py test eventkit/
+/var/lib/eventkit/.virtualenvs/eventkit/bin/python manage.py test eventkit_cloud
