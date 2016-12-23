@@ -1,6 +1,4 @@
 FROM ubuntu:16.04
-ARG MKGMAP_VERSION=r3693
-ARG SPLITTER_VERSION=r437
 
 # a few minor docker-specific tweaks
 # see https://github.com/docker/docker/blob/9a9fc01af8fb5d98b8eec0740716226fadb3735c/contrib/mkimage/debootstrap
@@ -40,8 +38,8 @@ RUN export PATH=/usr/local/bin:$PATH
 RUN echo "PATH=:$PATH" >> /etc/profile.d/path.sh
 RUN groupadd eventkit
 RUN useradd -g eventkit eventkit
-RUN apt-get update
-RUN apt-get -y install python-pip
+# Python dependecies needed for python-ldap
+RUN apt-get update && apt-get -y install python-pip libsasl2-dev python-dev libldap2-dev libssl-dev
 RUN pip install virtualenv
 RUN virtualenv /var/lib/eventkit/.virtualenvs/eventkit
 
@@ -78,9 +76,6 @@ RUN mkdir /var/lib/eventkit/exports_download
 RUN mkdir /var/lib/eventkit/db_dir
 RUN chown eventkit:eventkit -R /var/lib/eventkit/
 RUN mkdir /var/log/eventkit
-
-RUN chmod 755 /home
-
 RUN chown -R eventkit:eventkit /var/log/eventkit /var/lib/eventkit
 RUN chmod 755 /var/lib/eventkit
 RUN chmod 775 -R /var/lib/eventkit
@@ -99,5 +94,6 @@ EXPOSE 80
 COPY ./scripts /var/lib/eventkit/scripts
 RUN chmod 775 /var/lib/eventkit/scripts/*
 
+RUN chmod 755 /var/lib/eventkit /var/log/eventkit /home
 ENTRYPOINT ["sh", "/var/lib/eventkit/scripts/wait-for-postgis.sh", "postgres://eventkit:eventkit_exports@postgis:5432/eventkit_exports"]
 CMD ["echo", "Override this command in the docker-compose.yaml"]
