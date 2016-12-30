@@ -12,8 +12,9 @@ node('sl61') {
   docker-compose --file docker-compose-test.yml down
   docker-compose --file docker-compose-test.yml rm -f
   docker-compose --file docker-compose-test.yml build --no-cache --force-rm
-  docker-compose --file docker-compose-test.yml run --rm -e DEBUG=True -e DEVELOPMENT=True --entrypoint "/bin/bash" eventkit /var/lib/eventkit/scripts/unit-test-entrypoint.sh
   docker-compose --file docker-compose-test.yml up -d
-  docker-compose --file docker-compose-test.yml run --rm -e DEBUG=True -e DEVELOPMENT=True --entrypoint "/bin/bash" eventkit /var/lib/eventkit/scripts/integration-test-entrypoint.sh
+  docker-compose --file docker-compose-test.yml run --rm -e DATABASE_URl=postgis://eventkit:eventkit_exports@postgis:5432/eventkit_exports -e DEBUG=True -e DEVELOPMENT=True --entrypoint "/bin/bash" eventkit /var/lib/eventkit/scripts/unit-test-entrypoint.sh
+  docker-compose --file docker-compose-test.yml ps
+  docker-compose --file docker-compose-test.yml run --rm -e DATABASE_URl=postgis://eventkit:eventkit_exports@postgis:5432/eventkit_exports -e DEBUG=True -e DEVELOPMENT=True --entrypoint "/bin/bash" eventkit /var/lib/eventkit/scripts/integration-test-entrypoint.sh
   """
 }
