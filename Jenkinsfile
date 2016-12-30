@@ -9,6 +9,8 @@ node('sl61') {
   source ~/bin/activate
   pip install docker-compose
   docker images
+  docker rmi -f \$(docker images | grep "eventkit" | awk "{print \\\$3}")
+  docker images
   docker-compose --file docker-compose-test.yml down
   docker-compose --file docker-compose-test.yml rm -f
   docker-compose --file docker-compose-test.yml build --no-cache --force-rm
