@@ -17,6 +17,6 @@ node('sl61') {
   docker-compose --file docker-compose-test.yml up -d
   docker-compose --file docker-compose-test.yml run --rm -e DATABASE_URl=postgis://eventkit:eventkit_exports@postgis:5432/eventkit_exports -e DEBUG=True -e DEVELOPMENT=True --entrypoint "/bin/bash" eventkit /var/lib/eventkit/scripts/unit-test-entrypoint.sh
   docker-compose --file docker-compose-test.yml ps
-  docker-compose --file docker-compose-test.yml run --rm -e DATABASE_URl=postgis://eventkit:eventkit_exports@postgis:5432/eventkit_exports -e DEBUG=True -e DEVELOPMENT=True --entrypoint "/bin/bash" eventkit /var/lib/eventkit/scripts/integration-test-entrypoint.sh
+  docker-compose --file docker-compose-test.yml run --rm --user=root -e DATABASE_URl=postgis://eventkit:eventkit_exports@postgis:5432/eventkit_exports -e DEBUG=True -e DEVELOPMENT=True -e HTTPD_IP=$(ifconfig eth0 | grep "inet addr" | cut -d ':' -f 2 | cut -d ' ' -f 1) docker-compose run eventkit /sbin/ip addr) --entrypoint "/bin/bash" eventkit /var/lib/eventkit/scripts/integration-test-entrypoint.sh
   """
 }

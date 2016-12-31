@@ -18,4 +18,6 @@ export PROJECT_HOME=/var/lib/eventkit
 #/var/lib/eventkit/.virtualenvs/eventkit/bin/python /var/lib/eventkit/manage.py loaddata /var/lib/eventkit/eventkit_cloud/fixtures/insert_provider_types.json
 #/var/lib/eventkit/.virtualenvs/eventkit/bin/python /var/lib/eventkit/manage.py loaddata /var/lib/eventkit/eventkit_cloud/fixtures/osm_provider.json
 
+echo "httpd ip: $HTTPD_IP"
+echo "$HTTPD_IP    cloud.eventkit.dev" >> /etc/hosts
 /var/lib/eventkit/.virtualenvs/eventkit/bin/python manage.py run_integration_tests
