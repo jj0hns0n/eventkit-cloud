@@ -4,7 +4,7 @@ node('sl61') {
 
   stage 'Test'
   sh """
-  pip install --user virtualenv
+  pip install --user virtualenv --prefix "$HOME"
   ~/.local/bin/virtualenv --no-site-packages "$HOME"
   source ~/bin/activate
   pip install docker-compose
