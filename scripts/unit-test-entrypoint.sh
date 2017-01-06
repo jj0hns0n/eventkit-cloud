@@ -12,6 +12,8 @@ export PROJECT_HOME=/var/lib/eventkit
 
 echo "$SITE_IP\tcloud.eventkit.dev" >> /etc/hosts
 
+cat /etc/hosts
+
 /var/lib/eventkit/.virtualenvs/eventkit/bin/python /var/lib/eventkit/manage.py collectstatic --noinput
 /var/lib/eventkit/.virtualenvs/eventkit/bin/python /var/lib/eventkit/manage.py makemigrations
 /var/lib/eventkit/.virtualenvs/eventkit/bin/python /var/lib/eventkit/manage.py migrate
