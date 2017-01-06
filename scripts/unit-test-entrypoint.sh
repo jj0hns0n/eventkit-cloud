@@ -10,15 +10,11 @@ export EXPORT_DOWNLOAD_ROOT=/var/lib/eventkit/exports_download
 export WORKON_HOME=/var/lib/eventkit/.virtualenvs
 export PROJECT_HOME=/var/lib/eventkit
 
-echo "$SITE_IP\tcloud.eventkit.dev" >> /etc/hosts
-
-cat /etc/hosts
-
 /var/lib/eventkit/.virtualenvs/eventkit/bin/python /var/lib/eventkit/manage.py collectstatic --noinput
 /var/lib/eventkit/.virtualenvs/eventkit/bin/python /var/lib/eventkit/manage.py makemigrations
 /var/lib/eventkit/.virtualenvs/eventkit/bin/python /var/lib/eventkit/manage.py migrate
 /var/lib/eventkit/.virtualenvs/eventkit/bin/python /var/lib/eventkit/manage.py loaddata /var/lib/eventkit/eventkit_cloud/fixtures/admin_user.json
 #/var/lib/eventkit/.virtualenvs/eventkit/bin/python /var/lib/eventkit/manage.py loaddata /var/lib/eventkit/eventkit_cloud/fixtures/insert_provider_types.json
-/var/lib/eventkit/.virtualenvs/eventkit/bin/python /var/lib/eventkit/manage.py loaddata /var/lib/eventkit/eventkit_cloud/fixtures/osm_provider.json
+#/var/lib/eventkit/.virtualenvs/eventkit/bin/python /var/lib/eventkit/manage.py loaddata /var/lib/eventkit/eventkit_cloud/fixtures/osm_provider.json
 
 /var/lib/eventkit/.virtualenvs/eventkit/bin/python manage.py test eventkit_cloud
