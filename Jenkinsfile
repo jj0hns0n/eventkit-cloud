@@ -11,7 +11,8 @@ node('sl61') {
   docker-compose --file docker-compose-test.yml down
   docker-compose --file docker-compose-test.yml rm -f
   docker images
-  docker rmi -f \$(docker images | grep "eventkit" | awk "{print \\\$3}")
+  #TODO: only run this if there are images
+  #docker rmi -f \$(docker images | grep "eventkit" | awk "{print \\\$3}")
   docker images
   docker-compose --file docker-compose-test.yml build --no-cache --force-rm
   docker-compose --file docker-compose-test.yml up -d
