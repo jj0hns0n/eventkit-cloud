@@ -19,7 +19,7 @@ export PROJECT_HOME=/var/lib/eventkit
 #/var/lib/eventkit/.virtualenvs/eventkit/bin/python /var/lib/eventkit/manage.py loaddata /var/lib/eventkit/eventkit_cloud/fixtures/osm_provider.json
 
 
-echo "$SITE_IP\tcloud.eventkit.dev" >> /etc/hosts
+echo "$SITE_IP    cloud.eventkit.dev" >> /etc/hosts
 
 cat /etc/hosts
 
