@@ -24,6 +24,6 @@ node('sl61') {
   echo \$HTTPD_ID
   docker-compose --file docker-compose-test.yml run --rm -e SITE_NAME='cloud.eventkit.dev' -e SITE_IP=\$HTTPD_IP -e DATABASE_URL=postgis://eventkit:eventkit_exports@postgis:5432/eventkit_exports -e DEBUG=True -e DEVELOPMENT=True --entrypoint "/bin/bash" eventkit /var/lib/eventkit/scripts/unit-test-entrypoint.sh
   docker-compose --file docker-compose-test.yml ps
-  docker-compose --file docker-compose-test.yml run --rm --user=root -e DATABASE_URl=postgis://eventkit:eventkit_exports@postgis:5432/eventkit_exports -e DEBUG=True -e DEVELOPMENT=True -e SITE_NAME='cloud.eventkit.dev' -e SITE_IP=\$HTTPD_IP --entrypoint "/bin/bash" eventkit /var/lib/eventkit/scripts/integration-test-entrypoint.sh; echo \$?
+  docker-compose --file docker-compose-test.yml run -T --rm --user=root -e DATABASE_URl=postgis://eventkit:eventkit_exports@postgis:5432/eventkit_exports -e DEBUG=True -e DEVELOPMENT=True -e SITE_NAME='cloud.eventkit.dev' -e SITE_IP=\$HTTPD_IP --entrypoint "/bin/bash" eventkit /var/lib/eventkit/scripts/integration-test-entrypoint.sh; echo \$?
   """
 }
