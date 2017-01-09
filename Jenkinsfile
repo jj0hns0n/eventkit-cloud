@@ -17,7 +17,8 @@ node('sl61') {
   docker stop \$(docker ps -a -q)
   docker-compose --file docker-compose-test.yml build --no-cache --force-rm
   docker-compose --file docker-compose-test.yml up -d
-  /sbin/ip -o -4 addr
+  /sbin/ip -o -4 addr > /tmp/test
+  cat /tmp/test
   export HTTPD_IP=\$(/sbin/ip -o -4 addr | grep docker0 | awk '{print \$4}' | cut -d/ -f1 | head -n 1)
   #export HTTPD_IP=\$(docker-compose run eventkit /sbin/ip -o -4 addr | awk '{print \$4}' | cut -d/ -f1 | tail -n 1)
   echo \$HTTPD_ID
