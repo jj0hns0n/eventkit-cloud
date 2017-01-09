@@ -23,4 +23,4 @@ echo "$SITE_IP    cloud.eventkit.dev" >> /etc/hosts
 
 cat /etc/hosts
 
-/var/lib/eventkit/.virtualenvs/eventkit/bin/python manage.py run_integration_tests
+/var/lib/eventkit/.virtualenvs/eventkit/bin/python manage.py run_integration_tests; echo $?
