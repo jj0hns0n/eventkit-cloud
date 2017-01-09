@@ -1,8 +1,6 @@
 version: '2'
 services:
   base:
-     volumes:
-       - ./exports_download:/var/lib/eventkit/exports_download
      build:
        context: .
        dockerfile: config/Dockerfile
