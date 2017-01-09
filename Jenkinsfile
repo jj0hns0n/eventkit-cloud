@@ -15,15 +15,11 @@ node('sl61') {
   #docker rmi -f \$(docker images | grep "eventkit" | awk "{print \\\$3}")
   docker images
   docker stop \$(docker ps -a -q)
-  docker-compose --file docker-compose-test.yml build --no-cache --force-rm
+  docker-compose --file docker-compose-test.yml build
   docker-compose --file docker-compose-test.yml up -d
-  /sbin/ip -o -4 addr > /tmp/test-ip-addr
-  cat /tmp/test-ip-addr
-  export HTTPD_IP=\$(/sbin/ip -o -4 addr | grep docker0 | awk '{print \$4}' | cut -d/ -f1 | head -n 1)
-  #export HTTPD_IP=\$(docker-compose run eventkit /sbin/ip -o -4 addr | awk '{print \$4}' | cut -d/ -f1 | tail -n 1)
-  echo \$HTTPD_ID
-  docker-compose --file docker-compose-test.yml run --rm -e SITE_NAME='cloud.eventkit.dev' -e SITE_IP=\$HTTPD_IP -e DATABASE_URL=postgis://eventkit:eventkit_exports@postgis:5432/eventkit_exports -e DEBUG=True -e DEVELOPMENT=True --entrypoint "/bin/bash" eventkit /var/lib/eventkit/scripts/unit-test-entrypoint.sh
-  docker-compose --file docker-compose-test.yml ps
-  docker-compose --file docker-compose-test.yml run -T --rm --user=root -e DATABASE_URl=postgis://eventkit:eventkit_exports@postgis:5432/eventkit_exports -e DEBUG=True -e DEVELOPMENT=True -e SITE_NAME='cloud.eventkit.dev' -e SITE_IP=\$HTTPD_IP --entrypoint "/bin/bash" eventkit /var/lib/eventkit/scripts/integration-test-entrypoint.sh; echo \$?
+  docker-compose -f docker-compose-test.yml exec -T eventkit python manage.py test eventkit_cloud
+  docker-compose -f docker-compose-test.yml exec -T eventkit python manage.py migrate
+  docker-compose -f docker-compose-test.yml exec -T eventkit python manage.py loaddata providers
+  SITE_NAME=cloud.eventkit.dev SITE_IP=\$(/sbin/ip -o -4 addr | grep docker0 | awk '{print \$4}' | cut -d/ -f1 | head -n 1) docker-compose -f docker-compose-test.yml run -T run --rm -e SITE_NAME='cloud.eventkit.dev' -e SITE_IP=\$HTTPD_IP eventkit python manage.py run_integration_tests
   """
 }
