@@ -9,13 +9,13 @@ node('sl61') {
   source ~/bin/activate
   pip install docker-compose
   docker-compose --file docker-compose-test.yml down
-  docker-compose --file docker-compose-test.yml rm -f
-  docker images
-  #TODO: only run this if there are images
-  #docker rmi -f \$(docker images | grep "eventkit" | awk "{print \\\$3}")
-  docker images
-  docker stop \$(docker ps -a -q)
-  docker-compose --file docker-compose-test.yml build --no-cache --force-rm
+  #docker-compose --file docker-compose-test.yml rm -f
+  #docker images
+  ##TODO: only run this if there are images
+  ##docker rmi -f \$(docker images | grep "eventkit" | awk "{print \\\$3}")
+  #docker images
+  #docker stop \$(docker ps -a -q)
+  #docker-compose --file docker-compose-test.yml build --no-cache --force-rm
   docker-compose --file docker-compose-test.yml up -d
   /sbin/ip -o -4 addr > /tmp/test-ip-addr
   cat /tmp/test-ip-addr
