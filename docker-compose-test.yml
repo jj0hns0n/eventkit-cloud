@@ -7,13 +7,12 @@ services:
      working_dir: /var/lib/eventkit
      user: eventkit
      environment:
-        - DATABASE_URL=postgis://eventkit:eventkit_exports@postgis:5432/eventkit_exports
-        - BROKER_URL=amqp://guest:guest@rabbitmq:5672/
-        - DEBUG=True
-        - C_FORCE_ROOT=True
-        - PRODUCTION=True
-        - EXPORT_DOWNLOAD_ROOT=/var/lib/eventkit/exports_download
-        - SITE_NAME=${SITE_NAME}
+        - DATABASE_URL
+        - BROKER_URL
+        - DEBUG
+        - PRODUCTION
+        - EXPORT_DOWNLOAD_ROOT
+        - SITE_NAME
      extra_hosts:
         - "${SITE_NAME}:${SITE_IP}"
      command: echo 'Base box is not used, exiting now'
@@ -46,9 +45,9 @@ services:
   postgis:
     image: mdillon/postgis:9.5
     environment:
-      - POSTGRES_USER=eventkit
-      - POSTGRES_PASSWORD=eventkit_exports
-      - POSTGRES_DB=eventkit_exports
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
     expose:
       - "5432"
   rabbitmq:
