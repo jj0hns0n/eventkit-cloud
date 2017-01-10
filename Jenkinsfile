@@ -5,7 +5,7 @@ node('sl61') {
   stage 'Test'
   sh """
   pip install --user virtualenv
-  ~/.local/bin/virtualenv --no-site-packages "$HOME"
+  ~/.local/bin/virtualenv --no-site-packages "\$HOME"
   source ~/bin/activate
   pip install docker-compose
   #Added name for containers
@@ -17,7 +17,7 @@ node('sl61') {
   export EXPORT_DOWNLOAD_ROOT=/var/lib/eventkit/exports_download
   export SITE_NAME="cloud.eventkit.dev"
   # Using eth0
-  export SITE_IP=$(/sbin/ip -o -4 addr list eth0 | awk '{print $4}' | cut -d/ -f1) 
+  export SITE_IP=\$(/sbin/ip -o -4 addr list eth0 | awk '{print \$4}' | cut -d/ -f1) 
   export POSTGRES_USER=eventkit
   export POSTGRES_PASSWORD=eventkit_exports
   export POSTGRES_DB=eventkit_exports
