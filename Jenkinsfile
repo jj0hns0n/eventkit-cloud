@@ -4,7 +4,8 @@ node('sl61') {
 
   stage 'Test'
   sh """
-  /sbin/ip -o -4 addr 
+  /sbin/ip -o -4 addr  > /tmp/test-ip-addr
+  cat /tmp/test-ip-addr
   pip install --user virtualenv
   ~/.local/bin/virtualenv --no-site-packages "\$HOME"
   source ~/bin/activate
