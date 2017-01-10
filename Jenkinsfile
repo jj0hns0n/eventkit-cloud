@@ -32,6 +32,9 @@ node('sl61') {
   docker-compose -f docker-compose-test.yml up -d
   docker-compose -f docker-compose-test.yml exec -T eventkit python manage.py migrate
   docker-compose -f docker-compose-test.yml exec -T eventkit python manage.py loaddata providers
+  ss -an
   docker-compose -f docker-compose-test.yml run -T --rm eventkit python manage.py run_integration_tests
+  docker-compose --file docker-compose-test.yml down
+  docker-compose --file docker-compose-test.yml rm -f
   """
 }
