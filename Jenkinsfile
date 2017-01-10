@@ -8,6 +8,7 @@ node('sl61') {
   ~/.local/bin/virtualenv --no-site-packages "$HOME"
   source ~/bin/activate
   pip install docker-compose
+  #Added name for containers
   export COMPOSE_PROJECT_NAME=eventkit_cloud
   export DATABASE_URL=postgis://eventkit:eventkit_exports@postgis:5432/eventkit_exports
   export BROKER_URL=amqp://guest:guest@rabbitmq:5672/
@@ -15,6 +16,7 @@ node('sl61') {
   export PRODUCTION=True
   export EXPORT_DOWNLOAD_ROOT=/var/lib/eventkit/exports_download
   export SITE_NAME="cloud.eventkit.dev"
+  # Using eth0
   export SITE_IP=$(/sbin/ip -o -4 addr list eth0 | awk '{print $4}' | cut -d/ -f1) 
   export POSTGRES_USER=eventkit
   export POSTGRES_PASSWORD=eventkit_exports
