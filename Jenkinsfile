@@ -28,7 +28,7 @@ node('sl61') {
   docker images
   docker stop \$(docker ps -a -q)
   docker-compose -f docker-compose-test.yml build
-  docker-compose -f docker-compose-test.yml run -T -rm eventkit python manage.py test eventkit_cloud
+  docker-compose -f docker-compose-test.yml run -T --rm eventkit python manage.py test eventkit_cloud
   docker-compose -f docker-compose-test.yml up -d
   docker-compose -f docker-compose-test.yml exec -T eventkit python manage.py migrate
   docker-compose -f docker-compose-test.yml exec -T eventkit python manage.py loaddata providers
