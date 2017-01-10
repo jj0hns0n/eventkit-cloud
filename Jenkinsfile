@@ -18,7 +18,7 @@ node('sl61') {
   docker images
   docker stop \$(docker ps -a -q)
   docker-compose --file docker-compose-test.yml build
-  docker-compose --file docker-compose-test.yml up -d
+  SITE_NAME=cloud.eventkit.dev SITE_IP=\$(/sbin/ip -o -4 addr | grep docker0 | awk '{print \$4}' | cut -d/ -f1 | head -n 1) docker-compose --file docker-compose-test.yml up -d
   docker-compose -f docker-compose-test.yml exec -T eventkit python manage.py test eventkit_cloud
   docker-compose -f docker-compose-test.yml exec -T eventkit python manage.py migrate
   docker-compose -f docker-compose-test.yml exec -T eventkit python manage.py loaddata providers
