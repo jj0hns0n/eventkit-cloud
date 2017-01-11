@@ -8,7 +8,7 @@ node('sl61') {
   cat /tmp/test-ip-addr
   pip install --user virtualenv
   ~/.local/bin/virtualenv --no-site-packages "\$HOME"
-  source ~/bin/activate
+  . ~/bin/activate
   pip install docker-compose
   #Added name for containers
   export COMPOSE_PROJECT_NAME=eventkit_cloud
