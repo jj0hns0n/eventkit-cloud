@@ -4,7 +4,6 @@ node('sl61') {
 
   stage 'Test'
   sh """
-  sudo apt-get -y install python-pip
   /sbin/ip -o -4 addr  > /tmp/test-ip-addr
   cat /tmp/test-ip-addr
   pip install --user virtualenv
