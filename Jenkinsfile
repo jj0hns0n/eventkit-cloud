@@ -36,8 +36,11 @@ node('sl61') {
   docker-compose -f docker-compose-test.yml exec -T eventkit python manage.py migrate
   docker-compose -f docker-compose-test.yml exec -T eventkit python manage.py loaddata providers
   ss -an | grep 80
-  docker-compose -f docker-compose-test.yml run -T --rm eventkit --entrypoint /bin/ping \$SITE_NAME
-  docker-compose -f docker-compose-test.yml run -T --rm eventkit --entrypoint /bin/ping \$SITE_IP
+  docker-compose kill httpd
+  docker-compose kill eventkit
+  docker-compose run -p 80:80 --user=root eventkit python manage.py runserver 0.0.0.0:80
+  docker-compose ps
+  docker-compose -f docker-compose-test.yml run -T --rm eventkit python manage.py run_integration_tests
   docker-compose --file docker-compose-test.yml down
   docker-compose --file docker-compose-test.yml rm -f
   """
