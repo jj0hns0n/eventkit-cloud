@@ -25,11 +25,6 @@ node('sl61') {
   export POSTGRES_DB=eventkit_exports
   docker-compose --file docker-compose-test.yml down
   docker-compose --file docker-compose-test.yml rm -f
-  docker images
-  #TODO: only run this if there are images
-  #docker rmi -f \$(docker images | grep "eventkit" | awk "{print \\\$3}")
-  docker images
-  docker stop \$(docker ps -a -q)
   docker-compose -f docker-compose-test.yml build
   docker-compose -f docker-compose-test.yml run -T --rm eventkit python manage.py test eventkit_cloud
   docker-compose -f docker-compose-test.yml up -d
