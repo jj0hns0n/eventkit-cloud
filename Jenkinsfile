@@ -6,7 +6,7 @@ node('sl61') {
   sh """
   /sbin/ip -o -4 addr  > /tmp/test-ip-addr
   cat /tmp/test-ip-addr
-  pip install --user virtualenv
+  pip install --user virtualenv --force-reinstall
   ~/.local/bin/virtualenv --no-site-packages "\$HOME"
   . ~/bin/activate
   pip install docker-compose
