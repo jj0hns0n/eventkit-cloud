@@ -28,12 +28,8 @@ node('sl61') {
   docker-compose -f docker-compose-test.yml build
   docker-compose -f docker-compose-test.yml run -T --rm eventkit python manage.py test eventkit_cloud
   docker-compose -f docker-compose-test.yml up -d
-  docker-compose -f docker-compose-test.yml exec -T eventkit python manage.py migrate
-  docker-compose -f docker-compose-test.yml exec -T eventkit python manage.py loaddata providers
+  docker-compose -f docker-compose-test.yml run -T --rm eventkit python manage.py migrate
   ss -an | grep 80
-  docker-compose kill httpd
-  docker-compose kill eventkit
-  docker-compose run -p 80:80 --user=root eventkit python manage.py runserver 0.0.0.0:80
   docker-compose ps
   route
   docker-compose -f docker-compose-test.yml run -T --rm eventkit python manage.py run_integration_tests
