@@ -40,6 +40,7 @@ node('sl61') {
   docker-compose kill eventkit
   docker-compose run -p 80:80 --user=root eventkit python manage.py runserver 0.0.0.0:80
   docker-compose ps
+  route
   docker-compose -f docker-compose-test.yml run -T --rm eventkit python manage.py run_integration_tests
   docker-compose --file docker-compose-test.yml down
   docker-compose --file docker-compose-test.yml rm -f
