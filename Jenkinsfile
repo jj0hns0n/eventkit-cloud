@@ -75,7 +75,7 @@ node('sl61') {
     
     root=$(pwd -P)
     
-    ! test -f $root/ci/vars.sh || source $root/ci/vars.sh
+    # ! test -f $root/ci/vars.sh || source $root/ci/vars.sh
     
     test -n "$APP" || { echo "$0: APP not defined." >&2; exit 1; }
     test -n "$EXT" || { echo "$0: EXT not defined." >&2; exit 1; }
