@@ -78,16 +78,13 @@ node('sl61') {
     # ! test -f \$root/ci/vars.sh || source \$root/ci/vars.sh
     
     test -n "\$APP" || { echo "\$0: APP not defined." >&2; exit 1; }
-    test -n "\$EXT" || { echo "\$0: EXT not defined." >&2; exit 1; }
     
     export VERSION=\$(git describe --long --tags --always)
-    export ARTIFACT=\$APP-\$VERSION.\$EXT
     export PCF_HOSTNAME=\$(echo \$APP-\$VERSION | sed 's/\\./-/g')
     
     # _app_env end
     
     test -n "\$APP"           || { echo "\$0: APP not defined." >&2; exit 1; }
-    test -n "\$EXT"           || { echo "\$0: EXT not defined." >&2; exit 1; }
     test -n "\$VERSION"       || { echo "\$0: VERSION not defined." >&2; exit 1; }
     test -n "\$PCF_HOSTNAME"  || { echo "\$0: PCF_HOSTNAME not defined." >&2; exit 1; }
     
@@ -139,10 +136,7 @@ node('sl61') {
       echo "Printing log output as a result of the failure."
       cf logs --recent \$APP-\$VERSION
       cf delete \$APP-\$VERSION -f -r
-      #rm -f \$root/\$APP.\$EXT
     fi
-    
-    [ ! -f \$root/\$APP.\$EXT ] || rm -f \$root/\$APP.\$EXT
     
     export HISTFILE="\$oldhistfile"
     exit \$push_status
