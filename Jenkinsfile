@@ -63,7 +63,7 @@ node('sl61') {
 
     echo "\$APP;"
     echo "\$(pwd)"
-    export VERSION=\$(git rev-parse --short HEAD /var/lib/eventkit);
+    export VERSION=$GIT_COMMIT;
     echo "\$VERSION"
     echo "lol \$test"
     echo "\$PCF_API"
