@@ -51,10 +51,13 @@ node('sl61') {
   """
 
   stage 'Deploy'
-  sh """
-  set +x
-  echo \$test
-  echo \$PCF_API
-  echo \$PCF_HOSTNAME
-  """
+  withCredentials([
+      [$class: 'StringBinding', credentialsId: 'test', variable: 'test']
+  ]) {
+    sh """
+    set +x
+    echo \$test
+    echo \$PCF_API
+    echo \$PCF_HOSTNAME
+  } """
 }
