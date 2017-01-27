@@ -10,6 +10,13 @@ node('sl61') {
   ~/.local/bin/virtualenv --no-site-packages "\$HOME"
   . ~/bin/activate
   pip install docker-compose
+
+  #TODO: only run this if there are images
+  #XXX: we need this because the executors can run out of disk space, but
+  #     it needs a tweak to not run when there aren't any eventkit images found
+  #docker rmi -f \$(docker images | grep "eventkit" | awk "{print \\\$3}")
+
+
   #Added name for containers
   export COMPOSE_PROJECT_NAME=eventkit_cloud
   export DATABASE_URL=postgis://eventkit:eventkit_exports@postgis:5432/eventkit_exports
@@ -18,11 +25,13 @@ node('sl61') {
   export PRODUCTION=True
   export EXPORT_DOWNLOAD_ROOT=/var/lib/eventkit/exports_download
   export SITE_NAME="cloud.eventkit.dev"
+
   # Using eth0
   export SITE_IP=\$(/sbin/ip -o -4 addr list eth0 | awk '{print \$4}' | cut -d/ -f1) 
   export POSTGRES_USER=eventkit
   export POSTGRES_PASSWORD=eventkit_exports
   export POSTGRES_DB=eventkit_exports
+
   docker-compose --file docker-compose-test.yml down
   docker-compose --file docker-compose-test.yml rm -f
   docker-compose -f docker-compose-test.yml build
