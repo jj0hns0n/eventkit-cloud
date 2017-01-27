@@ -63,7 +63,7 @@ node('sl61') {
 
     echo "\$APP;"
     echo "\$(pwd)"
-    export VERSION=$GIT_COMMIT;
+    printenv
     echo "\$VERSION"
     echo "lol \$test"
     echo "\$PCF_API"
