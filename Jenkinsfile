@@ -48,4 +48,10 @@ node('sl61') {
   #docker-compose --file docker-compose-test.yml down
   #docker-compose --file docker-compose-test.yml rm -f
   """
+
+  stage 'Deploy'
+  sh """
+  echo "test";
+  """
+
 }
