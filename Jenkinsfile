@@ -55,6 +55,7 @@ node('sl61') {
       [$class: 'UsernamePasswordMultiBinding', credentialsId: 'PCF_PASSWORD', usernameVariable: 'PCF_USER', passwordVariable: 'PCF_PASSWORD'],
       [$class: 'StringBinding', credentialsId: 'PCF_API', variable: 'PCF_API'],
       [$class: 'StringBinding', credentialsId: 'PCF_APP', variable: 'PCF_APP'],
+      [$class: 'StringBinding', credentialsId: 'PCF_DOMAIN', variable: 'PCF_DOMAIN'],
       [$class: 'StringBinding', credentialsId: 'PCF_ORG', variable: 'PCF_ORG'],
       [$class: 'StringBinding', credentialsId: 'PCF_SPACE', variable: 'PCF_SPACE'],
       [$class: 'StringBinding', credentialsId: 'PCF_HOSTNAME', variable: 'PCF_HOSTNAME']
@@ -115,6 +116,7 @@ node('sl61') {
     test -n "\$PCF_PASSWORD"  || { echo "\$0: PCF_PASSWORD not defined." >&2;  exit 1; }
     test -n "\$PCF_ORG"   || { echo "\$0: PCF_ORG not defined." >&2;   exit 1; }
     test -n "\$PCF_SPACE" || { echo "\$0: PCF_SPACE not defined." >&2; exit 1; }
+    test -n "\$PCF_DOMAIN" || { echo "\$0: PCF_DOMAIN not defined." >&2; exit 1; }
     
     cf api \$PCF_API > /dev/null
     cf auth "\$PCF_USER" "\$PCF_PASSWORD" > /dev/null
