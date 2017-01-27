@@ -70,7 +70,7 @@ node('sl61') {
     echo "\$PCF_HOSTNAME"
 
     printenv
-    git clone $ci_url
+    git clone "$ci_url"
   """
   }
 }
