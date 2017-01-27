@@ -56,7 +56,7 @@ node('sl61') {
   ]) {
     sh """
     set +x
-    echo \$test
+    echo "lol \$test"
     echo \$PCF_API
     echo \$PCF_HOSTNAME
   """
