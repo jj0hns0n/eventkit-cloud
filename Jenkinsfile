@@ -53,8 +53,8 @@ node('sl61') {
   stage 'Deploy'
   sh """
   set +x
-  echo $test
-  echo $PCF_API
-  echo $PCF_HOSTNAME
+  echo \$test
+  echo \$PCF_API
+  echo \$PCF_HOSTNAME
   """
 }
