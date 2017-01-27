@@ -16,7 +16,6 @@ node('sl61') {
   #     it needs a tweak to not run when there aren't any eventkit images found
   #docker rmi -f \$(docker images | grep "eventkit" | awk "{print \\\$3}")
 
-
   #Added name for containers
   export COMPOSE_PROJECT_NAME=eventkit_cloud
   export DATABASE_URL=postgis://eventkit:eventkit_exports@postgis:5432/eventkit_exports
@@ -35,14 +34,18 @@ node('sl61') {
   docker-compose --file docker-compose-test.yml down
   docker-compose --file docker-compose-test.yml rm -f
   docker-compose -f docker-compose-test.yml build
+
+  # perform unit testing
   docker-compose -f docker-compose-test.yml run -T --rm eventkit python manage.py test eventkit_cloud
-  docker-compose -f docker-compose-test.yml up -d
-  docker-compose -f docker-compose-test.yml run -T --rm eventkit python manage.py migrate
-  ss -an | grep 80
-  docker-compose ps
-  route
-  docker-compose -f docker-compose-test.yml run -T --rm eventkit python manage.py run_integration_tests
-  docker-compose --file docker-compose-test.yml down
-  docker-compose --file docker-compose-test.yml rm -f
+
+  # perform integration testing
+  #docker-compose -f docker-compose-test.yml up -d
+  #docker-compose -f docker-compose-test.yml run -T --rm eventkit python manage.py migrate
+  #ss -an | grep 80
+  #docker-compose ps
+  #route
+  #docker-compose -f docker-compose-test.yml run -T --rm eventkit python manage.py run_integration_tests
+  #docker-compose --file docker-compose-test.yml down
+  #docker-compose --file docker-compose-test.yml rm -f
   """
 }
