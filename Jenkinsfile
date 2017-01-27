@@ -52,7 +52,7 @@ node('sl61') {
 
   stage 'Deploy'
   withCredentials([
-      [$class: 'UsernamePasswordMultiBinding', credentialsID: 'PCF_PASSWORD', usernameVariable': 'PCF_USER', passwordVariable: 'PCF_PASSWORD'],
+      [$class: 'UsernamePasswordMultiBinding', credentialsID: 'PCF_PASSWORD', usernameVariable: 'PCF_USER', passwordVariable: 'PCF_PASSWORD'],
       [$class: 'StringBinding', credentialsId: 'PCF_API', variable: 'PCF_API'],
       [$class: 'StringBinding', credentialsId: 'PCF_APP', variable: 'PCF_APP'],
       [$class: 'StringBinding', credentialsId: 'PCF_HOSTNAME', variable: 'PCF_HOSTNAME']
