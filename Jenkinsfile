@@ -59,5 +59,6 @@ node('sl61') {
     echo \$test
     echo \$PCF_API
     echo \$PCF_HOSTNAME
-  } """
+  """
+  }
 }
