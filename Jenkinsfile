@@ -55,11 +55,17 @@ node('sl61') {
     withCredentials([
         [$class: 'StringBinding', credentialsId: 'test', variable: 'test'],
         [$class: 'StringBinding', credentialsId: 'PCF_API', variable: 'PCF_API'],
+        [$class: 'StringBinding', credentialsId: 'PCF_APP', variable: 'PCF_APP'],
         [$class: 'StringBinding', credentialsId: 'PCF_HOSTNAME', variable: 'PCF_HOSTNAME']
     ]) {
       sh """
       set +x
-      echo "lol \$test"
+      export APP=$PCF_APP;
+      echo $APP;
+      export VERSION=$(cd /var/lib/eventkit; git rev-parse --short HEAD $eventkit_dir)
+      echo "$pwd"
+      echo "$version"
+      ech "lol \$test"
       echo "\$PCF_API"
       echo "\$PCF_HOSTNAME"
       curl \$PCF_API
