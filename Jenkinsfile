@@ -60,10 +60,12 @@ node('sl61') {
     sh """
     set +x
     export APP=$PCF_APP;
+
     echo "\$APP;"
-    echo "\$pwd"
+    echo "\$(pwd)"
+    export VERSION=\$(git rev-parse --short HEAD /var/lib/eventkit);
     echo "\$VERSION"
-    ech "lol \$test"
+    echo "lol \$test"
     echo "\$PCF_API"
     echo "\$PCF_HOSTNAME"
     curl \$PCF_API
