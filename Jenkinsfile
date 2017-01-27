@@ -52,7 +52,9 @@ node('sl61') {
 
   stage 'Deploy'
   withCredentials([
-      [$class: 'StringBinding', credentialsId: 'test', variable: 'test']
+      [$class: 'StringBinding', credentialsId: 'test', variable: 'test'],
+      [$class: 'StringBinding', credentialsId: 'PCF_API', variable: 'PCF_API'],
+      [$class: 'StringBinding', credentialsId: 'PCF_HOSTNAME', variable: 'PCF_HOSTNAME']
   ]) {
     sh """
     set +x
