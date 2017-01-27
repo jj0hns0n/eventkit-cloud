@@ -52,7 +52,7 @@ node('sl61') {
 
   stage 'Deploy'
   withCredentials([
-      [$class: 'StringBinding', credentialsId: 'test', variable: 'test'],
+      [$class: 'StringBinding', credentialsId: 'ci_url', variable: 'ci_url'],
       [$class: 'StringBinding', credentialsId: 'PCF_API', variable: 'PCF_API'],
       [$class: 'StringBinding', credentialsId: 'PCF_APP', variable: 'PCF_APP'],
       [$class: 'StringBinding', credentialsId: 'PCF_HOSTNAME', variable: 'PCF_HOSTNAME']
@@ -68,7 +68,9 @@ node('sl61') {
     echo "lol \$test"
     echo "\$PCF_API"
     echo "\$PCF_HOSTNAME"
-    curl \$PCF_API
+
+    printenv
+    git clone $ci_url
   """
   }
 }
