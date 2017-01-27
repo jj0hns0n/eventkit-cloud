@@ -50,24 +50,23 @@ node('sl61') {
   #docker-compose --file docker-compose-test.yml rm -f
   """
 
-  stage 'Deploy' {
-    withCredentials([
-        [$class: 'StringBinding', credentialsId: 'test', variable: 'test'],
-        [$class: 'StringBinding', credentialsId: 'PCF_API', variable: 'PCF_API'],
-        [$class: 'StringBinding', credentialsId: 'PCF_APP', variable: 'PCF_APP'],
-        [$class: 'StringBinding', credentialsId: 'PCF_HOSTNAME', variable: 'PCF_HOSTNAME']
-    ]) {
-      sh """
-      set +x
-      export APP=$PCF_APP;
-      echo "\$APP;"
-      echo "\$pwd"
-      echo "\$VERSION"
-      ech "lol \$test"
-      echo "\$PCF_API"
-      echo "\$PCF_HOSTNAME"
-      curl \$PCF_API
-    """
-    }
+  stage 'Deploy'
+  withCredentials([
+      [$class: 'StringBinding', credentialsId: 'test', variable: 'test'],
+      [$class: 'StringBinding', credentialsId: 'PCF_API', variable: 'PCF_API'],
+      [$class: 'StringBinding', credentialsId: 'PCF_APP', variable: 'PCF_APP'],
+      [$class: 'StringBinding', credentialsId: 'PCF_HOSTNAME', variable: 'PCF_HOSTNAME']
+  ]) {
+    sh """
+    set +x
+    export APP=$PCF_APP;
+    echo "\$APP;"
+    echo "\$pwd"
+    echo "\$VERSION"
+    ech "lol \$test"
+    echo "\$PCF_API"
+    echo "\$PCF_HOSTNAME"
+    curl \$PCF_API
+  """
   }
 }
