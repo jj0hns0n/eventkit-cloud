@@ -51,7 +51,7 @@ RUN gcc /var/lib/eventkit/osmctools/src/osmupdate.c -o /var/lib/eventkit/osmctoo
 RUN gcc /var/lib/eventkit/osmctools/src/osmfilter.c -O3 -o /var/lib/eventkit/osmctools/osmfilter
 RUN gcc /var/lib/eventkit/osmctools/src/osmconvert.c -lz -O3 -o /var/lib/eventkit/osmctools/osmconvert
 RUN cp /var/lib/eventkit/osmctools/osmupdate /var/lib/eventkit/osmctools/osmfilter /var/lib/eventkit/osmctools/osmconvert /usr/local/bin
-RUN rm -fr /var/lib/eventkit/osmctools
+RUN rm -rf /var/lib/eventkit/osmctools
 
 RUN add-apt-repository -y ppa:ubuntugis/ubuntugis-unstable
 RUN apt-get update
