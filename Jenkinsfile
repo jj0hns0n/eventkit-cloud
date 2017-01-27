@@ -55,6 +55,7 @@ node('sl61') {
       [$class: 'UsernamePasswordMultiBinding', credentialsId: 'PCF_PASSWORD', usernameVariable: 'PCF_USER', passwordVariable: 'PCF_PASSWORD'],
       [$class: 'StringBinding', credentialsId: 'PCF_API', variable: 'PCF_API'],
       [$class: 'StringBinding', credentialsId: 'PCF_APP', variable: 'PCF_APP'],
+      [$class: 'StringBinding', credentialsId: 'PCF_ORG', variable: 'PCF_ORG'],
       [$class: 'StringBinding', credentialsId: 'PCF_HOSTNAME', variable: 'PCF_HOSTNAME']
   ]) {
     sh """
