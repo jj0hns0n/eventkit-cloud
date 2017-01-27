@@ -59,11 +59,11 @@ node('sl61') {
   ]) {
     sh """
     set +x
-    export APP=$PCF_APP;
+    export APP=\$PCF_APP;
+    export VERSION=\$BUILD_NUM
 
     echo "\$APP;"
     echo "\$(pwd)"
-    printenv
     echo "\$VERSION"
     echo "lol \$test"
     echo "\$PCF_API"
