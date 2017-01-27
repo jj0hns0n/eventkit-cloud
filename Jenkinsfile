@@ -52,7 +52,7 @@ node('sl61') {
 
   stage 'Deploy'
   withCredentials([
-      [$class: 'StringBinding', credentialsId: 'ci_url', variable: 'ci_url'],
+      [$class: 'UsernamePasswordMultiBinding', credentialsID: 'PCF_PASSWORD', usernameVariable': 'PCF_USER', passwordVariable: 'PCF_PASSWORD'],
       [$class: 'StringBinding', credentialsId: 'PCF_API', variable: 'PCF_API'],
       [$class: 'StringBinding', credentialsId: 'PCF_APP', variable: 'PCF_APP'],
       [$class: 'StringBinding', credentialsId: 'PCF_HOSTNAME', variable: 'PCF_HOSTNAME']
@@ -110,6 +110,7 @@ node('sl61') {
     
     test -n "\$PCF_API"   || { echo "\$0: PCF_API not defined." >&2;   exit 1; }
     test -n "\$PCF_USER"  || { echo "\$0: PCF_USER not defined." >&2;  exit 1; }
+    test -n "\$PCF_PASSWORD"  || { echo "\$0: PCF_PASSWORD not defined." >&2;  exit 1; }
     test -n "\$PCF_ORG"   || { echo "\$0: PCF_ORG not defined." >&2;   exit 1; }
     test -n "\$PCF_SPACE" || { echo "\$0: PCF_SPACE not defined." >&2; exit 1; }
     
