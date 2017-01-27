@@ -14,7 +14,7 @@ node('sl61') {
   #TODO: only run this if there are images
   #XXX: we need this because the executors can run out of disk space, but
   #     it needs a tweak to not run when there aren't any eventkit images found
-  #docker rmi -f \$(docker images | grep "eventkit" | awk "{print \\\$3}")
+  docker rmi -f \$(docker images | awk "{print \\\$3}")
 
   #Added name for containers
   export COMPOSE_PROJECT_NAME=eventkit_cloud
