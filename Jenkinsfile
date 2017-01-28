@@ -134,7 +134,7 @@ node('sl61') {
     
     set +e
     
-    cf push \$APP-\$VERSION -f \$manifest --hostname \$PCF_HOSTNAME -d \$PCF_DOMAIN
+    cf push \$APP-\$VERSION -f "\$manifest" --hostname "\$PCF_HOSTNAME" -d "\$PCF_DOMAIN"
     
     push_status=\$?
     
