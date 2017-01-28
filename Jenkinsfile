@@ -94,7 +94,7 @@ node('sl61') {
     test -n "\$MANIFEST_YML_PATH"  || { echo "\$0: MANIFEST_YML_PATH not defined." >&2; exit 1; }
     
     # Use space specific manifest if availablie
-    export manifest=$MANIFEST_YML_PATH
+    export manifest="$MANIFEST_YML_PATH"
     echo "$MANIFEST_YML_PATH"
  
     set +x
