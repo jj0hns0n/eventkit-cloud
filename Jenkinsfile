@@ -52,7 +52,7 @@ node('sl61') {
 
   stage 'Deploy'
   withCredentials([
-      [$class: 'FileBinding', credentialsId: 'MANIFEST_YML', variable: MANIFEST_YML_PATH],
+      [$class: 'FileBinding', credentialsId: 'MANIFEST_YML', variable: 'MANIFEST_YML_PATH'],
       [$class: 'UsernamePasswordMultiBinding', credentialsId: 'PCF_PASSWORD', usernameVariable: 'PCF_USER', passwordVariable: 'PCF_PASSWORD'],
       [$class: 'StringBinding', credentialsId: 'PCF_API', variable: 'PCF_API'],
       [$class: 'StringBinding', credentialsId: 'PCF_APP', variable: 'PCF_APP'],
