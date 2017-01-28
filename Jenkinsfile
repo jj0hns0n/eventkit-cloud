@@ -52,6 +52,7 @@ node('sl61') {
 
   stage 'Deploy'
   withCredentials([
+      [$class: 'FileBinding', credentialsId: 'MANIFEST_YML', variable: MANIFEST_YML_PATH],
       [$class: 'UsernamePasswordMultiBinding', credentialsId: 'PCF_PASSWORD', usernameVariable: 'PCF_USER', passwordVariable: 'PCF_PASSWORD'],
       [$class: 'StringBinding', credentialsId: 'PCF_API', variable: 'PCF_API'],
       [$class: 'StringBinding', credentialsId: 'PCF_APP', variable: 'PCF_APP'],
@@ -90,9 +91,10 @@ node('sl61') {
     test -n "\$APP"           || { echo "\$0: APP not defined." >&2; exit 1; }
     test -n "\$VERSION"       || { echo "\$0: VERSION not defined." >&2; exit 1; }
     test -n "\$PCF_HOSTNAME"  || { echo "\$0: PCF_HOSTNAME not defined." >&2; exit 1; }
+    test -n "\$MANIFEST_YML_PATH"  || { echo "\$0: MANIFEST_YML_PATH not defined." >&2; exit 1; }
     
     # Use space specific manifest if availablie
-    manifest=manifest.jenkins.yml
+    manifest=$MANIFEST_YML_PATH;
     
     set +x
     oldhistfile="\$HISTFILE"
