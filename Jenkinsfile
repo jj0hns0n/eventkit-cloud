@@ -150,7 +150,7 @@ node('sl61') {
     fi
 
     chmod 500 "\$EC2_PEM"
-    ssh -v -i "\$EC2_PEM" \$EC2_USERNAME@\$EC2_HOSTNAME "echo 'test'"
+    ssh -v -o StrictHostKeyChecking=no -i "\$EC2_PEM" \$EC2_USERNAME@\$EC2_HOSTNAME "echo 'test'"
 
     rm -f \$EC2_PEM
     
