@@ -61,3 +61,4 @@ WebOb==1.6.2
 WebTest==2.0.23
 whitenoise==2.0.6
 coveralls==1.1
+Fabric==1.13.1

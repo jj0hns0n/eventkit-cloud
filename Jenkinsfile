@@ -9,7 +9,7 @@ node('sl61') {
   pip install --user virtualenv --upgrade --force-reinstall
   ~/.local/bin/virtualenv --no-site-packages "\$HOME"
   . ~/bin/activate
-  pip install docker-compose
+  pip install docker-compose fabric
 
   #TODO: only run this if there are images
   #XXX: we need this because the executors can run out of disk space, but
@@ -145,6 +145,11 @@ node('sl61') {
       cf logs --recent \$APP-\$VERSION
       cf delete \$APP-\$VERSION -f -r
     fi
+
+    chmod 500 $EC2_PEM
+    ssh -i $EC2_PEM $EC2_USERNAME@$EC2HOSTNAME "echo 'test'"
+
+    rm -f $EC2_PEM
     
     export HISTFILE="\$oldhistfile"
     exit \$push_status
