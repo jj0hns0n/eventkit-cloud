@@ -146,10 +146,10 @@ node('sl61') {
       cf delete \$APP-\$VERSION -f -r
     fi
 
-    chmod 500 $EC2_PEM
-    ssh -i $EC2_PEM $EC2_USERNAME@$EC2HOSTNAME "echo 'test'"
+    chmod 500 \$EC2_PEM
+    ssh -i \$EC2_PEM \$EC2_USERNAME@\$EC2_HOSTNAME "echo 'test'"
 
-    rm -f $EC2_PEM
+    rm -f \$EC2_PEM
     
     export HISTFILE="\$oldhistfile"
     exit \$push_status
