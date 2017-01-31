@@ -40,7 +40,7 @@ ENV PATH /var/lib/.virtualenvs/eventkit/bin:$PATH
 RUN groupadd eventkit
 RUN useradd -g eventkit eventkit
 # Python dependecies needed for python-ldap
-RUN apt-get update && apt-get -y install python-pip libsasl2-dev python-dev libldap2-dev libssl-dev build-essential
+RUN apt-get update && apt-get -y install python-pip libsasl2-dev python-dev libldap2-dev libssl-dev build-essential libffy-dev
 RUN pip install virtualenv
 RUN virtualenv /var/lib/.virtualenvs/eventkit
 
