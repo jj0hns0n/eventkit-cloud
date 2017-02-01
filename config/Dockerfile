@@ -37,8 +37,8 @@ RUN sed -i 's/^#\s*\(deb.*universe\)$/\1/g' /etc/apt/sources.list
 RUN export PATH=/var/lib/.virtualenvs/eventkit/bin:/usr/local/bin:$PATH
 RUN echo "PATH=:$PATH" >> /etc/profile.d/path.sh
 ENV PATH /var/lib/.virtualenvs/eventkit/bin:$PATH
-RUN groupadd eventkit
-RUN useradd -g eventkit eventkit
+RUN groupadd -g 880 eventkit
+RUN useradd -u 8800 -g 880 eventkit
 # Python dependecies needed for python-ldap
 RUN apt-get update && apt-get -y install python-pip libsasl2-dev python-dev libldap2-dev libssl-dev build-essential libffi-dev
 RUN pip install virtualenv
@@ -96,5 +96,7 @@ COPY ./scripts /var/lib/eventkit/scripts
 RUN chmod 775 /var/lib/eventkit/scripts/*
 
 RUN chmod 755 /var/lib/eventkit /var/log/eventkit /home
-ENTRYPOINT ["sh", "/var/lib/eventkit/scripts/wait-for-postgis.sh", "postgres://eventkit:eventkit_exports@postgis:5432/eventkit_exports"]
+RUN chown -R eventkit:eventkit /var/lib/eventkit /var/log/eventkit
+
+ENTRYPOINT ["sh", "/var/lib/eventkit/scripts/wait-for-postgis.sh"]
 CMD ["echo", "Override this command in the docker-compose.yaml"]

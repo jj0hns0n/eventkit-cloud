@@ -18,19 +18,17 @@ INSTALLED_APPS += (
     'django_classification_banner',
 )
 
-INSTALLED_APPS += ("djcelery", )
-import djcelery
-djcelery.setup_loader()
+INSTALLED_APPS += ("django_celery_results", "django_celery_beat", )
 
 LOGIN_URL = '/login/'
 
 EXPORT_TASKS = {
-    'shp': 'eventkit_cloud.tasks.export_tasks.ShpExportTask',
+    'shp': 'eventkit_cloud.tasks.export_tasks.shp_export_task',
     'obf': 'eventkit_cloud.tasks.export_tasks.ObfExportTask',
-    'sqlite': 'eventkit_cloud.tasks.export_tasks.SqliteExportTask',
-    'kml': 'eventkit_cloud.tasks.export_tasks.KmlExportTask',
+    'sqlite': 'eventkit_cloud.tasks.export_tasks.sqlite_export_task',
+    'kml': 'eventkit_cloud.tasks.export_tasks.kml_export_task',
     'thematic': 'eventkit_cloud.tasks.export_tasks.ThematicLayersExportTask',
-    'gpkg': 'eventkit_cloud.tasks.export_tasks.GeopackageExportTask'
+    'gpkg': 'eventkit_cloud.tasks.export_tasks.geopackage_export_task'
 }
 
 
@@ -68,18 +66,16 @@ JOB_MAX_EXTENT = os.getenv('JOB_MAX_EXTENT', 2500000)  # default export max exte
 # maximum number of runs to hold for each export
 EXPORT_MAX_RUNS = 1
 
+import socket
+HOSTNAME = os.getenv('HOSTNAME', socket.gethostname())
 if os.environ.get('VCAP_APPLICATION'):
     env = json.loads(os.environ.get('VCAP_APPLICATION'))
-    HOSTNAME = os.getenv('HOSTNAME', env['application_uris'][0])
-    SITE_NAME = os.getenv('SITE_NAME', HOSTNAME)
-    SITE_URL = os.getenv('SITE_URL', "https://{0}".format(SITE_NAME))
-else:
-    import socket
-    HOSTNAME = os.getenv('HOSTNAME', socket.gethostname())
-    SITE_NAME = os.getenv('SITE_NAME', HOSTNAME)
-    if SITE_NAME == '':
-        SITE_NAME = 'localhost'
-    SITE_URL = os.getenv('SITE_URL', 'http://{0}'.format(SITE_NAME))
+    if env['application_uris']:
+        HOSTNAME = os.getenv('HOSTNAME', env['application_uris'][0])
+SITE_NAME = os.getenv('SITE_NAME', HOSTNAME)
+if SITE_NAME == '':
+    SITE_NAME = 'localhost'
+SITE_URL = os.getenv('SITE_URL', 'http://{0}'.format(SITE_NAME))
 SITE_ID = 1
 
 """
@@ -122,3 +118,4 @@ http://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL#timeout
 OVERPASS_TIMEOUT = os.getenv('OVERPASS_TIMEOUT', 1600)  # query timeout in seconds
 
 USE_DISK_CACHE = True
+

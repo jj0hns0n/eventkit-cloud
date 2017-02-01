@@ -7,16 +7,18 @@ from mapproxy.seed.config import SeedingConfiguration, SeedConfigurationError, C
 from mapproxy.seed.spec import validate_seed_conf
 from mapproxy.config.loader import ProxyConfiguration
 from mapproxy.config.spec import validate_options
+
 from mapproxy.config.config import load_config, base_config
 from mapproxy.seed import seeder
 from mapproxy.seed.util import ProgressLog
 from .geopackage import remove_empty_zoom_levels
-from billiard.util import register_after_fork
+from django.conf import settings
 import yaml
 from django.core.files.temp import NamedTemporaryFile
 import logging
-from django.db import connection, connections, OperationalError
+from django.db import connections
 from ..tasks.task_process import TaskProcess
+import requests
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +41,6 @@ class CustomLogger(ProgressLog):
                     self.log_step_counter = self.log_step_step
                 self.log_step_counter -= 1
         super(CustomLogger, self).log_step(progress)
-
 
 class ExternalRasterServiceToGeopackage(object):
     """
@@ -106,11 +107,12 @@ class ExternalRasterServiceToGeopackage(object):
         seed_configuration = SeedingConfiguration(seed_dict, mapproxy_conf=mapproxy_configuration)
         logger.info("Beginning seeding to {}".format(self.gpkgfile))
         try:
+            check_service(conf_dict)
             progress_logger = CustomLogger(verbose=True, task_uid=self.task_uid)
             task_process = TaskProcess(task_uid=self.task_uid)
             task_process.start_process(billiard=True, target=seeder.seed,
                         kwargs={"tasks": seed_configuration.seeds(['seed']),
-                                "concurrency": 1,
+                                "concurrency": int(getattr(settings, 'MAPPROXY_CONCURRENCY', 1)),
                                 "progress_logger": progress_logger})
             remove_empty_zoom_levels(self.gpkgfile)
         except Exception as e:
@@ -149,7 +151,9 @@ def get_cache_template(sources, grids, geopackage):
             "type": "geopackage",
             "filename": str(geopackage),
         },
-        "grids": grids
+        "grids": grids,
+        "format": "mixed",
+        "request_format": "image/png"
     }}
 
 
@@ -188,3 +192,26 @@ def create_conf_from_url(service_url):
     except yaml.YAMLError as exc:
         logger.error(exc)
     return conf_dict
+
+
+def check_service(conf_dict):
+    """
+    Used to verify the state of the service before running the seed task. This is used to prevent and invalid url from
+    being seeded.  MapProxy's default behavior is to either cache a blank tile or to retry, that behavior can be altered,
+    in the cache settings (i.e. `get_cache_template`).
+    :param conf_dict: A MapProxy configuration as a dict.
+    :return: None if valid, otherwise exception is raised.
+    """
+
+    for source in conf_dict.get('sources', []):
+        if not conf_dict['sources'][source].get('url'):
+            continue
+        tile = {'x': '1', 'y': '1', 'z': '1'}
+        url = conf_dict['sources'][source].get('url') % tile
+        response = requests.get(url, verify=False)
+        if response.status_code in [401, 403]:
+            logger.error("The provider has invalid credentials with status code {0} and the text: \n{1}".format(response.status_code, response.text))
+            raise Exception("The provider does not have valid credentials.")
+        elif response.status_code >= 500:
+            logger.error("The provider reported a server error with status code {0} and the text: \n{1}".format(response.status_code, response.text))
+            raise Exception("The provider reported a server error.")

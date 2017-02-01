@@ -126,7 +126,9 @@ class TestJobViewSet(APITestCase):
             'xmax': 7.0,
             'ymax': 27.6,
             'provider_tasks': [{'provider': 'test', 'formats': formats}],
-            'export_providers': [{'name': 'test', 'level_from': 0, 'level_to': 0, 'url': 'http://coolproviderurl.to'}],
+            'export_providers': [{'name': 'test', 'level_from': 0, 'level_to': 0,
+                                  'url': 'http://coolproviderurl.to',
+                                  'preview_url': 'http://coolproviderurl.to'}],
             'preset': config_uid,
             'transform': '',
             'translation': ''
@@ -139,7 +141,7 @@ class TestJobViewSet(APITestCase):
         self.assertEqual(response['exports'][0]['provider'], 'test')
 
         request_data['export_providers'][0]['name'] = 'test 2'
-        # should be idempontent
+        # should be idempotent
         self.client.post(url, request_data, format='json')
         export_providers = ExportProvider.objects.all()
         self.assertEqual(len(export_providers), export_providers_start_len + 1)
@@ -226,7 +228,7 @@ class TestJobViewSet(APITestCase):
         job = Job.objects.get(uid=job_uid)
         self.assertEqual(job.include_zipfile, True)
 
-    @patch('eventkit_cloud.api.views.PickUpRunTask')
+    @patch('eventkit_cloud.api.views.pick_up_run_task')
     @patch('eventkit_cloud.api.views.create_run')
     def test_create_job_success(self, create_run_mock, pickup_mock):
         create_run_mock.return_value = "some_run_uid"
@@ -251,7 +253,7 @@ class TestJobViewSet(APITestCase):
         job_uid = response.data['uid']
         # test that the mock methods get called.
         create_run_mock.assert_called_once_with(job_uid=job_uid)
-        pickup_mock.return_value.delay.assert_called_once_with(run_uid="some_run_uid")
+        pickup_mock.delay.assert_called_once_with(run_uid="some_run_uid")
         # test the response headers
         self.assertEquals(response.status_code, status.HTTP_202_ACCEPTED)
         self.assertEquals(response['Content-Type'], 'application/json; version=1.0')
@@ -273,7 +275,7 @@ class TestJobViewSet(APITestCase):
         self.assertIsNotNone(tags)
         self.assertEquals(233, len(tags))
 
-    @patch('eventkit_cloud.api.views.PickUpRunTask')
+    @patch('eventkit_cloud.api.views.pick_up_run_task')
     @patch('eventkit_cloud.api.views.create_run')
     def test_create_job_with_config_success(self, create_run_mock, pickup_mock):
         create_run_mock.return_value = "some_run_uid"
@@ -298,7 +300,7 @@ class TestJobViewSet(APITestCase):
         job_uid = response.data['uid']
         # test that the mock methods get called.
         create_run_mock.assert_called_once_with(job_uid=job_uid)
-        pickup_mock.return_value.delay.assert_called_once_with(run_uid="some_run_uid")
+        pickup_mock.delay.assert_called_once_with(run_uid="some_run_uid")
 
         # test the response headers
         self.assertEquals(response.status_code, status.HTTP_202_ACCEPTED)
@@ -316,7 +318,7 @@ class TestJobViewSet(APITestCase):
         configs = self.job.configs.all()
         self.assertIsNotNone(configs[0])
 
-    @patch('eventkit_cloud.api.views.PickUpRunTask')
+    @patch('eventkit_cloud.api.views.pick_up_run_task')
     @patch('eventkit_cloud.api.views.create_run')
     def test_create_job_with_tags(self, create_run_mock, pickup_mock):
         create_run_mock.return_value = "some_run_uid"
@@ -343,7 +345,7 @@ class TestJobViewSet(APITestCase):
         job_uid = response.data['uid']
         # test that the mock methods get called.
         create_run_mock.assert_called_once_with(job_uid=job_uid)
-        pickup_mock.return_value.delay.assert_called_once_with(run_uid="some_run_uid")
+        pickup_mock.delay.assert_called_once_with(run_uid="some_run_uid")
 
         # test the response headers
         self.assertEquals(response.status_code, status.HTTP_202_ACCEPTED)
@@ -586,7 +588,7 @@ class TestBBoxSearch(APITestCase):
         self.user = None
         self.client = None
 
-    @patch('eventkit_cloud.tasks.task_runners.ExportOSMTaskRunner')
+    @patch('eventkit_cloud.tasks.task_runners.ExportGenericOSMTaskRunner')
     def setUp(self, mock):
         task_runner = mock.return_value
         url = reverse('api:jobs-list')
@@ -989,7 +991,7 @@ class TestExportTaskViewSet(APITestCase):
                                 HTTP_ACCEPT='application/json; version=1.0',
                                 HTTP_ACCEPT_LANGUAGE='en',
                                 HTTP_HOST='testserver')
-        self.export_run = ExportRun.objects.create(job=self.job)
+        self.export_run = ExportRun.objects.create(job=self.job, user=self.user)
         self.celery_uid = str(uuid.uuid4())
         self.export_provider_task = ExportProviderTask.objects.create(run=self.export_run,
                                                                       name='Shapefile Export')
@@ -1024,8 +1026,13 @@ class TestExportTaskViewSet(APITestCase):
         self.assertEquals(self.task_uid, data[0].get('uid'))
 
     def test_patch_cancel_task(self, ):
+        expected = '/api/provider_tasks/{0}'.format(self.export_provider_task.uid)
         url = reverse('api:provider_tasks-list') + '/%s' % (self.export_provider_task.uid,)
+        self.assertEquals(expected, url)
         response = self.client.patch(url)
+        # test significant content
+        self.assertEquals(response.data, {'success': True})
+        self.assertEquals(response.status_code, status.HTTP_200_OK)
 
         pt = ExportProviderTask.objects.get(uid=self.export_provider_task.uid)
         et = pt.tasks.last()
@@ -1033,6 +1040,27 @@ class TestExportTaskViewSet(APITestCase):
         self.assertEqual(pt.status, 'CANCELED')
         self.assertEqual(et.status, 'CANCELED')
 
+    def test_patch_cancel_task_no_permissions(self, ):
+        user = User.objects.create_user(
+            username='other_user', email='other_user@demo.com', password='demo'
+        )
+        token = Token.objects.create(user=user)
+        # reset the client credentials to the new user
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key,
+                                HTTP_ACCEPT='application/json; version=1.0',
+                                HTTP_ACCEPT_LANGUAGE='en',
+                                HTTP_HOST='testserver')
+        expected = '/api/provider_tasks/{0}'.format(self.export_provider_task.uid)
+        url = reverse('api:provider_tasks-list') + '/%s' % (self.export_provider_task.uid,)
+        self.assertEquals(expected, url)
+        response = self.client.patch(url)
+        # test the response headers
+        self.assertEquals(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEquals(response['Content-Type'], 'application/json; version=1.0')
+        self.assertEquals(response['Content-Language'], 'en')
+
+        # test significant content
+        self.assertEquals(response.data, {'success': False})
 
     def test_export_provider_task_get(self):
         url = reverse('api:provider_tasks-list')
