@@ -6,7 +6,8 @@ import logging
 import os
 import shutil
 from zipfile import ZipFile
-import socket
+
+from time import sleep
 
 from django.conf import settings
 from django.core.files.base import ContentFile
@@ -18,7 +19,13 @@ from django.utils import timezone
 from enum import Enum
 from celery.result import AsyncResult
 from celery import Task
+from celery import states
 from celery.utils.log import get_task_logger
+from celery.worker.control import control_command
+from celery.signals import worker_ready
+from time import sleep
+import socket
+
 from ..celery import app, TaskPriority
 from ..jobs.presets import TagParser
 from ..utils import (
@@ -445,6 +452,7 @@ def external_raster_service_export_task(self, result=None, layer=None, config=No
         raise Exception(e)
 
 
+
 @app.task(name='Pickup Run', bind=True)
 def pick_up_run_task(self, result=None, run_uid=None):
     """
@@ -459,7 +467,6 @@ def pick_up_run_task(self, result=None, run_uid=None):
     run.worker = worker
     run.save()
     TaskFactory().parse_tasks(worker=worker, run_uid=run_uid)
-
 
 @app.task(name='Generate Preset', bind=True, base=ExportTask)
 def generate_preset_task(self, result=None, run_uid=None, task_uid=None, stage_dir=None, job_name=None):
@@ -865,7 +872,6 @@ def kill_task(task_pid=None, celery_uid=None):
 
     # This all works but isn't helpful until priority queues are supported.
     import os, signal
-    import celery
 
     if task_pid:
         # Don't kill tasks with default pid.
@@ -874,7 +880,7 @@ def kill_task(task_pid=None, celery_uid=None):
         try:
 
             # Ensure the task is still running otherwise the wrong process will be killed
-            if AsyncResult(celery_uid, app=app).state == celery.states.STARTED:
+            if AsyncResult(celery_uid, app=app).state == states.STARTED:
                 # If the task finished prior to receiving this kill message it could throw an OSError.
                 os.kill(task_pid, signal.SIGTERM)
         except OSError:
@@ -927,3 +933,19 @@ def parse_result(task_result, key=''):
     else:
         return task_result
 
+@control_command(args=[], signature='[]')
+@app.task(name="shutdown_eventkit")
+def shutdown_eventkit(*args, **kwargs):
+    from ..celery import app
+    from ..tasks.models import ExportRun
+    from ..tasks.export_tasks import TaskStates
+
+    worker = socket.gethostname()
+    app.control.cancel_consumer('celery', destination=['celery@{0}'.format(worker)])
+    logger.error("THE TERM SIGNAL WAS RECEIVED.")
+    runs = ExportRun.objects.filter(worker=worker)
+    if all(TaskStates[run.status] in TaskStates.get_finished_states() for run in runs):
+        app.control.broadcast('shutdown', destination=['cancel@{0}'.format(worker),
+                                                       'worker@{0}'.format(worker)])
+        return {'ok': 'worker shutdown'}
+    return {'waiting': "{0} has an active job.".format(runs[0].user.username)}

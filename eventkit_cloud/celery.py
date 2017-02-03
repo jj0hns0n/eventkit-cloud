@@ -3,10 +3,15 @@ from __future__ import absolute_import
 import os
 from enum import Enum
 from celery import Celery
+from celery.utils.log import get_logger
+
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'eventkit_cloud.settings.prod')
 
 from django.conf import settings  # noqa
 
+# Get an instance of a logger
+logger = get_logger(__name__)
 
 class TaskPriority(Enum):
     CANCEL = 80                 # If cancel isn't higher than new tasks, long running processes will needlessly
@@ -24,7 +29,5 @@ app.config_from_object('django.conf:settings')
 app.autodiscover_tasks()
 
 app.conf.task_protocol = 1
-
-
 
 
