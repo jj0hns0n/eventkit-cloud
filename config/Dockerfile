@@ -97,6 +97,9 @@ RUN chmod 775 /var/lib/eventkit/scripts/*
 
 RUN chmod 755 /var/lib/eventkit /var/log/eventkit /home
 RUN chown -R eventkit:eventkit /var/lib/eventkit /var/log/eventkit
+RUN touch /opt/celery.pem
+RUN chown -f -R eventkit:eventkit /opt/celery.pem
+RUN chmod 755 /opt/celery.pem
 
 ENTRYPOINT ["sh", "/var/lib/eventkit/scripts/wait-for-postgis.sh"]
 CMD ["echo", "Override this command in the docker-compose.yaml"]

@@ -60,6 +60,7 @@ services:
        context: .
        dockerfile: config/Dockerfile_httpd
      volumes:
+       - /home/mvv/Downloads/celerykey2:/opt/celery.pem
        - ./eventkit_cloud:/var/lib/eventkit/eventkit_cloud
        - ./exports_download:/var/lib/eventkit/exports_download
      image: httpd:2.4.23
