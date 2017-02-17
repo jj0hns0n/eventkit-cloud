@@ -48,7 +48,7 @@ services:
         - MAPPROXY_CONCURRENCY=1
       command: sh /var/lib/eventkit/scripts/celery-entrypoint.sh
       volumes:
-       - /home/mvv/Downloads/celerykey2.pem:/opt/celery.pem
+       - ${EC2_PEM}:/opt/celery.pem
   celery-beat:
       extends:
         service: base
