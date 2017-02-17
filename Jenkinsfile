@@ -34,7 +34,7 @@ node('sl61') {
 
   docker-compose --file docker-compose-test.yml down
   docker-compose --file docker-compose-test.yml rm -f
-  docker-compose -f docker-compose-test.yml build
+  docker-compose -f docker-compose-test.yml build --no-cache
 
   # perform unit testing
   docker-compose -f docker-compose-test.yml run -T --rm eventkit python manage.py test eventkit_cloud
