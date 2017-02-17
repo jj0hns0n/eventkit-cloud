@@ -150,7 +150,8 @@ node('sl61') {
     fi
 
     chmod 500 "\$EC2_PEM"
-    ssh -o StrictHostKeyChecking=no -i "\$EC2_PEM" \$EC2_USERNAME@\$EC2_HOSTNAME "echo 'abcd'"
+    #ssh -o StrictHostKeyChecking=no -i "\$EC2_PEM" \$EC2_USERNAME@\$EC2_HOSTNAME "echo 'abcd'"
+    docker-compose run -e SSH_USER=$EC2_USERNAME -e DATABASE_URL=$DATABASE_URL -e EVENTKIT_CWD='/home/ubuntu/eventkit-cloud' -e EC2_HOSTNAME=$EC2_HOSTNAME --entrypoint /var/lib/.virtualenvs/eventkit/bin/fab --user=root celery -i /opt/celery.pem -f fabfile.py deploy_ec2
 
     rm -f \$EC2_PEM
     
