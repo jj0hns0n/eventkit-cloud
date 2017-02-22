@@ -87,7 +87,7 @@ node('sl61') {
     test -n "\$APP" || { echo "\$0: APP not defined." >&2; exit 1; }
     
     export VERSION=\$(git describe --long --tags --always)
-    export PCF_HOSTNAME=\$(echo \$APP-\$VERSION | sed 's/\\./-/g')
+    #export PCF_HOSTNAME=\$(echo \$APP-\$VERSION | sed 's/\\./-/g')
     
     # _app_env end
     
@@ -137,7 +137,7 @@ node('sl61') {
     
     set +e
     
-    cf push \$APP-\$VERSION -f "\$manifest" --hostname "\$PCF_HOSTNAME" -d "\$PCF_DOMAIN"
+    cf push \$APP -f "\$manifest" --hostname "\$PCF_HOSTNAME" -d "\$PCF_DOMAIN"
     
     push_status=\$?
     
@@ -151,7 +151,7 @@ node('sl61') {
 
     chmod 500 "\$EC2_PEM"
     #ssh -o StrictHostKeyChecking=no -i "\$EC2_PEM" \$EC2_USERNAME@\$EC2_HOSTNAME "echo 'abcd'"
-    docker-compose run -e SSH_USER=\$EC2_USERNAME -e DATABASE_URL=\$DATABASE_URL -e EVENTKIT_CWD='/home/ubuntu/eventkit-cloud' -e EC2_HOSTNAME=\$EC2_HOSTNAME --entrypoint /var/lib/.virtualenvs/eventkit/bin/fab --user=root celery -i /opt/celery.pem -f fabfile.py deploy_ec2
+    #docker-compose run -e SSH_USER=\$EC2_USERNAME -e DATABASE_URL=\$DATABASE_URL -e EVENTKIT_CWD='/home/ubuntu/eventkit-cloud' -e EC2_HOSTNAME=\$EC2_HOSTNAME --entrypoint /var/lib/.virtualenvs/eventkit/bin/fab --user=root celery -i /opt/celery.pem -f fabfile.py deploy_ec2
 
     rm -f \$EC2_PEM
     
