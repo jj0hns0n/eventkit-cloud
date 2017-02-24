@@ -61,8 +61,10 @@ node('sl61') {
       [$class: 'StringBinding', credentialsId: 'PCF_DOMAIN', variable: 'PCF_DOMAIN'],
       [$class: 'StringBinding', credentialsId: 'PCF_ORG', variable: 'PCF_ORG'],
       [$class: 'StringBinding', credentialsId: 'PCF_SPACE', variable: 'PCF_SPACE'],
-      [$class: 'StringBinding', credentialsId: 'PCF_HOSTNAME', variable: 'PCF_HOSTNAME']
-      [$class: 'StringBinding', credentialsId: 'SITE_NAME', variable: 'SITE_NAME']
+      [$class: 'StringBinding', credentialsId: 'PCF_HOSTNAME', variable: 'PCF_HOSTNAME'],
+      [$class: 'StringBinding', credentialsId: 'SITE_NAME', variable: 'SITE_NAME'],
+      [$class: 'StringBinding', credentialsId: 'EVENTKIT_USERNAME', variable: 'EVENTKIT_USERNAME'],
+      [$class: 'StringBinding', credentialsId: 'EVENTKIT_PASSWORD', variable: 'EVENTKIT_PASSWORD']
   ]) {
     sh """
     set +x
