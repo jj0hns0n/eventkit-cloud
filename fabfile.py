@@ -38,13 +38,13 @@ def deploy_ec2():
 
         # install new containers
         run(
-            'sudo docker-compose run -T '
+            'sudo docker-compose run -d -T '
             '--entrypoint "sh" celery '
             '/var/lib/eventkit/scripts/celery-entrypoint.sh %s' % (database_url,)
         )
 
         run(
-            'sudo docker-compose run -T '
+            'sudo docker-compose run -d -T '
             '--entrypoint "sh" celery-beat '
             '/var/lib/eventkit/scripts/celery-beat-entrypoint.sh %s' % (database_url,)
         )
