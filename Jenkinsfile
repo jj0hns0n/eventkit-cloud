@@ -156,7 +156,7 @@ node('sl61') {
 
     rm -f \$EC2_PEM
 
-    docker-compose -f docker-compose-test.yml run -e SITE_NAME=\$SITE_NAME -e USERNAME=$EC2_USER -e PASSWORD=$EC2_P -T --rm eventkit python manage.py run_integration_tests
+    docker-compose -f docker-compose-test.yml run -e SITE_NAME=\$SITE_NAME -e USERNAME=\$EVENTKIT_USER -e PASSWORD=$EVENTKIT_PASSWORD -T --rm eventkit python manage.py run_integration_tests
     
     export HISTFILE="\$oldhistfile"
     exit \$push_status
