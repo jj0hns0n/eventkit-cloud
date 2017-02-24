@@ -45,7 +45,6 @@ node('sl61') {
   #ss -an | grep 80
   #docker-compose ps
   #route
-  #docker-compose -f docker-compose-test.yml run -T --rm eventkit python manage.py run_integration_tests
   #docker-compose --file docker-compose-test.yml down
   #docker-compose --file docker-compose-test.yml rm -f
   """
@@ -63,6 +62,7 @@ node('sl61') {
       [$class: 'StringBinding', credentialsId: 'PCF_ORG', variable: 'PCF_ORG'],
       [$class: 'StringBinding', credentialsId: 'PCF_SPACE', variable: 'PCF_SPACE'],
       [$class: 'StringBinding', credentialsId: 'PCF_HOSTNAME', variable: 'PCF_HOSTNAME']
+      [$class: 'StringBinding', credentialsId: 'SITE_NAME', variable: 'SITE_NAME']
   ]) {
     sh """
     set +x
@@ -155,9 +155,12 @@ node('sl61') {
     docker-compose run -e SSH_USER=\$EC2_USERNAME -e DATABASE_URL=\$DATABASE_URL -e EVENTKIT_CWD='/home/ubuntu/eventkit-cloud' -e EC2_HOSTNAME=\$EC2_HOSTNAME --entrypoint /var/lib/.virtualenvs/eventkit/bin/fab --user=root celery -i /opt/celery.pem -f fabfile.py deploy_ec2
 
     rm -f \$EC2_PEM
+
+    docker-compose -f docker-compose-test.yml run -e SITE_NAME=\$SITE_NAME -e USERNAME=$EC2_USER -e PASSWORD=$EC2_P -T --rm eventkit python manage.py run_integration_tests
     
     export HISTFILE="\$oldhistfile"
     exit \$push_status
+
   """
   }
 }
