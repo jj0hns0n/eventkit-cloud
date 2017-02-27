@@ -66,8 +66,7 @@ node('sl61') {
       [$class: 'UsernamePasswordMultiBinding', credentialsId: 'EVENTKIT_PASSWORD', usernameVariable: 'EVENTKIT_USER', passwordVariable: 'EVENTKIT_PASSWORD'],
   ]) {
     sh """
-    export root=\$(pwd -P)
-    find . -name 'jenkins-deploy.sh'
+    ./scripts/jenkins-deploy.sh
   """
   }
 }
