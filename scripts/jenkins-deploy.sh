@@ -89,7 +89,7 @@ docker-compose run -e SSH_USER=$EC2_USERNAME -e DATABASE_URL=$DATABASE_URL -e EV
 
 rm -f $EC2_PEM
 
-docker-compose -f docker-compose-test.yml run -e SITE_NAME=$SITE_NAME -e USERNAME=$EVENTKIT_USER -e PASSWORD=$EVENTKIT_PASSWORD -T --rm eventkit python manage.py run_integration_tests
+docker-compose -f docker-compose-test.yml run -e DATABASE_URL=$DATABASE_URL -e SITE_NAME=$SITE_NAME -e USERNAME=$EVENTKIT_USER -e PASSWORD=$EVENTKIT_PASSWORD -T --rm eventkit python manage.py run_integration_tests
 
 export HISTFILE="$oldhistfile"
 exit $push_status
