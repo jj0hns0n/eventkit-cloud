@@ -67,7 +67,7 @@ node('sl61') {
   ]) {
     sh """
     export root=\$(pwd -P)
-    source \$root/scripts/jenkins-deploy.sh
+    find . -name 'jenkins-deploy.sh'
   """
   }
 }
