@@ -16,6 +16,7 @@ node('sl61') {
   #     it needs a tweak to not run when there aren't any eventkit images found
   #docker-compose --file docker-compose-test.yml down
   #docker rmi -f \$(docker images | awk "{print \\\$3}")
+  docker rmi -f $(docker images | grep eventkit | tr -s \' \' | cut -f 3 -d " " | uniq)'
 
   #Added name for containers
   export COMPOSE_PROJECT_NAME=eventkit_cloud
