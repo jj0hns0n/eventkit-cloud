@@ -55,7 +55,7 @@ RUN rm -rf /var/lib/eventkit/osmctools
 
 RUN add-apt-repository -y ppa:ubuntugis/ubuntugis-unstable
 RUN apt-get update
-RUN apt-get -y install gdal-bin libgdal-dev libgeos-dev libspatialite-dev libspatialite7 libgeos-c1v5 libsqlite3-mod-spatialite osmctools spatialite-bin libspatialite7 libspatialite-dev default-jre zip unzip postgresql-client
+RUN apt-get -y --allow-unauthenticated install gdal-bin libgdal-dev libgeos-dev libspatialite-dev libspatialite7 libgeos-c1v5 libsqlite3-mod-spatialite osmctools spatialite-bin libspatialite7 libspatialite-dev default-jre zip unzip postgresql-client
 
 #RUN mkdir /var/lib/eventkit/tmp
 #RUN cd /var/lib/eventkit/tmp

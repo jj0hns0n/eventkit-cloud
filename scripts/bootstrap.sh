@@ -45,7 +45,7 @@ cd ~
 sudo apt-get -y install software-properties-common
 sudo add-apt-repository -y ppa:ubuntugis/ubuntugis-unstable
 sudo apt-get update
-sudo apt-get -y install gdal-bin libgdal-dev libgeos-dev libspatialite-dev libspatialite7 libgeos-c1v5 libsqlite3-mod-spatialite
+sudo apt-get -y --allow-unauthenticated install gdal-bin libgdal-dev libgeos-dev libspatialite-dev libspatialite7 libgeos-c1v5 libsqlite3-mod-spatialite
 
 sudo apt-get -y install osmctools
 sudo apt-get -y install spatialite-bin libspatialite7 libspatialite-dev
