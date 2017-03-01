@@ -32,7 +32,9 @@ def deploy_ec2():
         except:
             pass
         # TODO: remove intermediate and discarded container images
-
+        # TODO: use git reset instead of git pull
+        # TODO: chmod dirs correctly
+        run('sudo git pull origin master')
         run('sudo docker-compose build')
 
         # install new containers
