@@ -33,8 +33,7 @@ def deploy_ec2():
             pass
         # TODO: remove intermediate and discarded container images
 
-        run('sudo docker-compose build celery-beat')   
-        run('sudo docker-compose build celery')   
+        run('sudo docker-compose build')
 
         # install new containers
         run(
