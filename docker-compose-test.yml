@@ -35,8 +35,8 @@ services:
         - "6080"
       volumes:
         - ./coverage/coveralls:/var/lib/eventkit/coverage/coveralls:ro
-        - ./scripts:/var/lib/eventkit/scripts
-        - ./eventkit_cloud/management/tests:/var/lib/eventkit_cloud/management/tests
+        - ./scripts:/var/lib/eventkit/scripts:ro
+        - ./eventkit_cloud/management/tests:/var/lib/eventkit_cloud/management/tests:ro
       command: sh /var/lib/eventkit/scripts/eventkit-entrypoint.sh
   celery:
       extends:
