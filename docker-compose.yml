@@ -147,6 +147,14 @@ services:
         - "${SITE_NAME}:${SITE_IP}"
       #if wishing to use the dev server uncomment this or run it via the command line
       # command: node --debug-brk --inspect=${SITE_NAME}:9229 ./node_modules/.bin/jest --runInBand
+  conda:
+    build:
+      context: .
+      dockerfile: config/Dockerfile_conda
+    volumes:
+      - ./out:/root/conda-repo
+      - ./conda-recipes:/root/eventkit
+      - ./config/conda-build.sh:/root/conda-build.sh
 volumes:
     postgis_database:
 
