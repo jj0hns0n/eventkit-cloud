@@ -3,8 +3,15 @@ import ol from 'openlayers';
 import '../tap_events'
 import DataPackDetails from './DataPackDetails'
 import RaisedButton from 'material-ui/RaisedButton';
+import DropDownMenu from 'material-ui/DropDownMenu';
+import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
-import moment from 'moment'
+import moment from 'moment';
+import SocialGroup from 'material-ui/svg-icons/social/group';
+import SocialPerson from 'material-ui/svg-icons/social/person';
+import Check from 'material-ui/svg-icons/navigation/check'
+import Edit from 'material-ui/svg-icons/image/edit';
+import DatePicker from 'material-ui/DatePicker';
 
 export class DataCartDetails extends React.Component {
     constructor(props) {
@@ -135,6 +142,20 @@ export class DataCartDetails extends React.Component {
 
     };
 
+    openDatePicker = () => {
+        this.refs.dp.openDialog()
+    };
+
+    handlePublishedChange = (event, index, value) => {
+        if(value == 1) {
+            // hit the API and change published to true
+        }
+        else {
+            // hit the API and change published to false
+        }
+    };
+
+
     render() {
 
         const providers = this.props.cartDetails.provider_tasks.filter((provider) => {
@@ -144,8 +165,16 @@ export class DataCartDetails extends React.Component {
         const styles = {
             tdHeader: {backgroundColor: '#f8f8f8', padding: '10px', fontWeight: 'bold'},
             tdData: {backgroundColor: '#f8f8f8', padding: '10px', color: '#8b9396'},
-            subHeading: {fontSize: '16px', alignContent: 'flex-start', color: 'black', paddingBottom: '10px', paddingTop: '30px', fontWeight: 'bold'}
-        }
+            subHeading: {fontSize: '16px', alignContent: 'flex-start', color: 'black', paddingBottom: '10px', paddingTop: '30px', fontWeight: 'bold'},
+            textField: {fontSize: '14px', height: '36px', width: '0px', display:'inlineBlock'},
+            dropDown: {height: '30px', lineHeight: '35px', float: 'left',},
+            item: {fontSize: '14px',},
+            icon: {height: '30px', width: '30px', padding: '0px', marginRight: '5px', fill: '#4498c0' },
+            label: {lineHeight: '30px', color: '#8b9396', paddingLeft: '0px', fontSize: '14px', fontWeight: 'normal' },
+            list: { paddingTop: '5px', paddingBottom: '0px', display:'inlineBlock'},
+            underline: {display:'none', marginLeft: '0px'},
+            selected: {color: '#4498c0', fontWeight: 'bold'},
+        };
 
         const deleteActions = [
             <RaisedButton
@@ -211,12 +240,59 @@ export class DataCartDetails extends React.Component {
                             <td style={{...styles.tdHeader, width: '15%'}}>Name</td>
                             <td style={styles.tdData}>{this.props.cartDetails.job.name}</td>
                         </tr>
-                        <tr>
-                            <td style={{...styles.tdHeader, backgroundColor: this.state.statusBackgroundColor, width: '15%'}}>Status</td>
-                            <td style={{...styles.tdData, backgroundColor: this.state.statusBackgroundColor, color: this.state.statusFontColor}}>
-                                {this.props.cartDetails.status}
-                            </td>
-                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+            <div style={styles.subHeading}>
+                Status
+            </div>
+            <div>
+                <table>
+                    <tbody>
+
+                    <tr>
+                        <td style={{...styles.tdHeader, backgroundColor: this.state.statusBackgroundColor, width: '15%'}}>Export</td>
+                        <td style={{...styles.tdData, backgroundColor: this.state.statusBackgroundColor, color: this.state.statusFontColor}}>
+                            {this.props.cartDetails.status}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style={{...styles.tdHeader, width: '15%'}}>Expiration</td>
+                        <td style={{backgroundColor: '#f8f8f8', paddingRight: '10px',paddingLeft:'10px', paddingTop:'0px', display:'inlineBlock', paddingBottom:'0px', color: '#8b9396'}}>
+                            {moment(this.props.cartDetails.expiration).format('MMMM Do YYYY')}
+                            <DatePicker
+                            ref="dp"
+                            style={{height:'0px',display: '-webkit-inline-box', width:'0px'}}
+                            autoOk={true}
+                            id="datePicker"
+                            textFieldStyle={styles.textField}
+                            underlineStyle={{display: 'none'}}
+                            />
+                            <Edit onClick={(e) => { this.refs.dp.focus() }}  key={this.props.cartDetails.uid} style={{marginLeft:'10px',height:'18px', width:'18px', cursor: 'pointer', display:'inlineBlock', fill:'#4598bf', verticalAlign: 'middle'}}/></td>
+                    </tr>
+                    <tr>
+                        <td style={{...styles.tdHeader, width: '15%'}}>Permission</td>
+                        <td style={styles.tdData}><DropDownMenu
+                            value={this.props.cartDetails.job.published == true? 1 : 2}
+                            onChange={this.handlePublishedChange}
+                            style={styles.dropDown}
+                            labelStyle={styles.label}
+                            iconStyle={styles.icon}
+                            listStyle={styles.list}
+                            selectedMenuItemStyle={styles.selected}
+                            underlineStyle={styles.underline}>
+                            <MenuItem value={1}
+                                      leftIcon={<SocialGroup style={{fill: '#bcdfbb', height: '26px', marginBottom: '2px'}}/>}
+                                      rightIcon={this.props.cartDetails.job.published == true? <Check style={{fill: '#4598bf', height: '26px', marginBottom: '2px'}}/> : null}
+                                      primaryText="Public"/>
+                            <MenuItem value={2}
+                                      leftIcon={<SocialPerson style={{fill: 'grey', height: '26px', marginBottom: '2px'}} />}
+                                      rightIcon={this.props.cartDetails.job.published == false? <Check style={{fill: '#4598bf', height: '26px', marginBottom: '2px'}}/> : null}
+                                      primaryText="Private" />
+
+                        </DropDownMenu></td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -303,10 +379,6 @@ export class DataCartDetails extends React.Component {
                             <tr>
                                 <td style={styles.tdHeader}>Project/Category</td>
                                 <td style={styles.tdData}>{this.props.cartDetails.job.event}</td>
-                            </tr>
-                            <tr>
-                                <td style={styles.tdHeader}>Published</td>
-                                <td style={styles.tdData}>{this.props.cartDetails.job.published.toString()}</td>
                             </tr>
                             <tr>
                                 <td style={styles.tdHeader}>Layer Data</td>
