@@ -15,9 +15,19 @@ import DatePicker from 'material-ui/DatePicker';
 
 export class DataCartDetails extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
+
+        const minDate = new Date();
+        let maxDate;
+        var d = new Date();
+        var m = moment(d);
+        m.add(1, 'days');
+        m.add(1, 'months');
+        maxDate = m.toDate();
 
         this.state = {
+            minDate: minDate,
+            maxDate: maxDate,
             cartDetails: {},
             status: '',
             statusBackgroundColor: '',
@@ -155,9 +165,12 @@ export class DataCartDetails extends React.Component {
         }
     };
 
+    handleExpirationChange = (e, date) => {
+        //hit the API and change expiration date.
+    }
+
 
     render() {
-
         const providers = this.props.cartDetails.provider_tasks.filter((provider) => {
             return provider.display != false;
         });
@@ -265,7 +278,10 @@ export class DataCartDetails extends React.Component {
                             ref="dp"
                             style={{height:'0px',display: '-webkit-inline-box', width:'0px'}}
                             autoOk={true}
+                            minDate={this.state.minDate}
+                            maxDate={this.state.maxDate}
                             id="datePicker"
+                            onChange={this.handleExpirationChange}
                             textFieldStyle={styles.textField}
                             underlineStyle={{display: 'none'}}
                             />
