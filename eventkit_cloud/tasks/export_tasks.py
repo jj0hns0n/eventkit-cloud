@@ -353,37 +353,6 @@ def osm_data_collection_task(
     return {'result': gpkg_filepath}
 
 
-@app.task(name="QGIS Project file (.qgs)", bind=True, base=FormatTask, abort_on_error=False)
-def osm_create_styles_task(self, result=None, task_uid=None, stage_dir=None, job_name=None, provider_slug=None,
-                           provider_name=None, bbox=None, user_details=None
-                           ):
-    """
-    Task to create styles for osm.
-    """
-    result = result or {}
-    self.update_task_state(result=result, task_uid=task_uid)
-    input_gpkg = parse_result(result, 'geopackage')
-
-    gpkg_file = '{}.gpkg'.format(job_name)
-    style_file = os.path.join(stage_dir, '{0}-osm-{1}.qgs'.format(job_name,
-                                                                  timezone.now().strftime("%Y%m%d")))
-
-    from audit_logging.file_logging import logging_open
-    with logging_open(style_file, 'w', user_details=user_details) as open_file:
-        open_file.write(render_to_string('styles/Style.qgs', context={'gpkg_filename': os.path.basename(gpkg_file),
-                                                                      'layer_id_prefix': '{0}-osm-{1}'.format(job_name,
-                                                                                                              timezone.now().strftime(
-                                                                                                                  "%Y%m%d")),
-                                                                      'layer_id_date_time': '{0}'.format(
-                                                                          timezone.now().strftime("%Y%m%d%H%M%S%f")[
-                                                                          :-3]),
-                                                                      'bbox': bbox,
-                                                                      'provider_name': provider_name}))
-    result['result'] = style_file
-    result['geopackage'] = input_gpkg
-    return result
-
-
 @app.task(name='ESRI Shapefile Format', bind=True, base=FormatTask)
 def shp_export_task(self, result=None, run_uid=None, task_uid=None, stage_dir=None, job_name=None, user_details=None):
     """
@@ -892,6 +861,33 @@ def example_finalize_run_hook_task(self, new_zip_filepaths=[], run_uid=None):
 
     return created_files
 
+@app.task(name="QGIS Project file (.qgs)", base=FinalizeRunHookTask, bind=True, abort_on_error=False)
+def create_style_task(self, new_zip_filepaths=[], run_uid=None):
+    """
+    Task to create styles for osm.
+    """
+    from eventkit_cloud.tasks.models import ExportRun
+    run = ExportRun.objects.get(uid=run_uid)
+    stage_dir = os.path.join(settings.EXPORT_STAGING_ROOT, str(run_uid))
+    input_gpkg = "test.gpkg"
+    
+    job_name = "test"
+    provider_name = "test"
+    gpkg_file = '{}.gpkg'.format(job_name)
+    style_file = os.path.join(stage_dir, '{0}-osm-{1}.qgs'.format(job_name,
+                                                                  timezone.now().strftime("%Y%m%d")))
+
+    with open(style_file, 'w') as open_file:
+        open_file.write(render_to_string('styles/Style.qgs', context={'gpkg_filename': os.path.basename(gpkg_file),
+                                                                      'layer_id_prefix': '{0}-osm-{1}'.format(job_name,
+                                                                                                              timezone.now().strftime(
+                                                                                                                  "%Y%m%d")),
+                                                                      'layer_id_date_time': '{0}'.format(
+                                                                          timezone.now().strftime("%Y%m%d%H%M%S%f")[
+                                                                          :-3]),
+                                                                      'bbox': [0,0,0,0],
+                                                                      'provider_name': provider_name}))
+    return [style_file]
 
 @app.task(name='Prepare Export Zip', base=FinalizeRunHookTask)
 def prepare_for_export_zip_task(extra_files, run_uid=None):

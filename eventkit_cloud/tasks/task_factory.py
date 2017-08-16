@@ -12,7 +12,7 @@ from django.utils import timezone
 
 from celery import chain
 from eventkit_cloud.tasks.export_tasks import zip_export_provider, finalize_run_task, finalize_run_task_as_errback, \
-    example_finalize_run_hook_task, prepare_for_export_zip_task, zip_file_task
+    example_finalize_run_hook_task, prepare_for_export_zip_task, zip_file_task, create_style_task
 
 from ..jobs.models import Job
 from ..tasks.export_tasks import finalize_export_provider_task, clean_up_failure_task, TaskPriority
@@ -241,7 +241,7 @@ def create_finalize_run_task_collection(run_uid=None, run_dir=None, worker=None)
         'priority': TaskPriority.FINALIZE_RUN.value}
 
     # These should be subclassed from FinalizeRunHookTask
-    hook_tasks = [example_finalize_run_hook_task]
+    hook_tasks = [create_style_task]
     hook_task_sigs = []
     if len(hook_tasks) > 0:
         # When the resulting chain is made part of a bigger chain, we don't want the result of the previous
