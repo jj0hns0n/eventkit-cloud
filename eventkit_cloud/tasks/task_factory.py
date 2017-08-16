@@ -11,7 +11,7 @@ from django.db import DatabaseError, transaction
 from django.utils import timezone
 
 from celery import chain
-from eventkit_cloud.tasks.export_tasks import zip_export_provider, finalize_run_task, finalize_run_task_as_errback, \
+from eventkit_cloud.tasks.export_tasks import finalize_run_task, finalize_run_task_as_errback, \
     example_finalize_run_hook_task, prepare_for_export_zip_task, zip_file_task, create_style_task
 
 from ..jobs.models import Job

@@ -894,7 +894,7 @@ def prepare_for_export_zip_task(extra_files, run_uid=None):
     from eventkit_cloud.tasks.models import ExportRun
     run = ExportRun.objects.get(uid=run_uid)
 
-    if run.job.include_zipfile:
+    if True:
         # To prepare for the zipfile task, the files need to be checked to ensure they weren't
         # deleted during cancellation.
         include_files = list(extra_files)
@@ -918,6 +918,8 @@ def prepare_for_export_zip_task(extra_files, run_uid=None):
         # Need to remove duplicates from the list because
         # some intermediate tasks produce files with the same name.
         include_files = set(include_files)
+        logger.error("\n\ninclude_files in prepare_for_export_zip_task = %s\n\n" % str(include_files))
+
         if include_files:
             zip_file_task.run(run_uid=run_uid, include_files=include_files)
         else:
@@ -969,6 +971,7 @@ def zip_file_task(include_files, run_uid=None, file_name=None, adhoc=False, stat
     st_filepath = os.path.join(staging_root, str(run_uid))
 
     files = []
+    logger.error("\n\n\ninclude_files in zip_file_task = %s\n\n\n" % include_files)
     if not include_files:
         logger.warn("zip_file_task called with no include_files.")
         return {'result': None}
