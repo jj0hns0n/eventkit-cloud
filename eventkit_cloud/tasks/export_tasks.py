@@ -702,43 +702,6 @@ def clean_up_failure_task(result=None, export_provider_task_uids=[], run_uid=Non
     return result
 
 
-def include_zipfile(run_uid=None, provider_tasks=[], extra_files=[]):
-    """ Collects all export provider result files, combines them with @extra_files,
-        and runs a zip_file_task with the resulting set of files.
-    """
-    from eventkit_cloud.tasks.models import ExportRun
-    run = ExportRun.objects.get(uid=run_uid)
-
-    if run.job.include_zipfile:
-        # To prepare for the zipfile task, the files need to be checked to ensure they weren't
-        # deleted during cancellation.
-        include_files = []
-
-        for export_provider_task in provider_tasks:
-            if TaskStates[export_provider_task.status] not in TaskStates.get_incomplete_states():
-                for export_task in export_provider_task.tasks.all():
-                    try:
-                        filename = export_task.result.filename
-                    except Exception:
-                        continue
-                    full_file_path = os.path.join(settings.EXPORT_STAGING_ROOT, str(run_uid),
-                                                  export_provider_task.slug, filename)
-                    if not os.path.isfile(full_file_path):
-                        logger.error("Could not find file {0} for export {1}.".format(full_file_path,
-                                                                                      export_task.name))
-                        continue
-                    include_files += [full_file_path]
-        # Need to remove duplicates from the list because
-        # some intermediate tasks produce files with the same name.
-        include_files.extend(extra_files)
-        include_files = list(set(include_files))
-        if include_files:
-            #zip_file_task.run(run_uid=run_uid, include_files=include_files)
-            print
-        else:
-            logger.warn('No files to zip for run_uid/provider_tasks: {}/{}'.format(run_uid, provider_tasks))
-
-
 class FinalizeRunHookTask(LockingTask):
     """ Base for tasks which execute after all export provider tasks have completed, but before finalize_run_task.
         - Ensures the task state is recorded when the task is started and after it has completed.
@@ -895,39 +858,32 @@ def prepare_for_export_zip_task(extra_files, run_uid=None):
     from eventkit_cloud.tasks.models import ExportRun
     run = ExportRun.objects.get(uid=run_uid)
 
-    if run.job.include_zipfile:
-        # To prepare for the zipfile task, the files need to be checked to ensure they weren't
-        # deleted during cancellation.
-        include_files = list(extra_files)
+    # To prepare for the zipfile task, the files need to be checked to ensure they weren't
+    # deleted during cancellation.
+    include_files = list(extra_files)
 
-        provider_tasks = run.provider_tasks.all()
+    provider_tasks = run.provider_tasks.all()
 
-        for provider_task in provider_tasks:
-            if TaskStates[provider_task.status] not in TaskStates.get_incomplete_states():
-                for export_task in provider_task.tasks.all():
-                    try:
-                        filename = export_task.result.filename
-                    except Exception as e:
-                        continue
-                    full_file_path = os.path.join(settings.EXPORT_STAGING_ROOT, str(run_uid),
-                                                  provider_task.slug, filename)
-                    if not os.path.isfile(full_file_path):
-                        logger.error("Could not find file {0} for export {1}.".format(full_file_path,
-                                                                                      export_task.name))
-                        continue
-                    include_files += [full_file_path]
-        # Need to remove duplicates from the list because
-        # some intermediate tasks produce files with the same name.
-        include_files = set(include_files)
-        logger.error("\n\n\ninclude_files=%s\n\n\n" % include_files)
-        return include_files
-        """
-        if include_files:
-            #zip_file_task.run(run_uid=run_uid, include_files=include_files)
-            print
-        else:
-            logger.warn('No files to zip for run_uid: {}'.format(run_uid))
-        """
+    for provider_task in provider_tasks:
+        if TaskStates[provider_task.status] not in TaskStates.get_incomplete_states():
+            for export_task in provider_task.tasks.all():
+                try:
+                    filename = export_task.result.filename
+                except Exception:
+                    continue
+                full_file_path = os.path.join(settings.EXPORT_STAGING_ROOT, str(run_uid),
+                                                 provider_task.slug, filename)
+                if not os.path.isfile(full_file_path):
+                    logger.error("Could not find file {0} for export {1}.".format(full_file_path,
+                                                                                     export_task.name))
+                    continue
+                include_files += [full_file_path]
+    # Need to remove duplicates from the list because
+    # some intermediate tasks produce files with the same name.
+    include_files = set(include_files)
+    logger.error("\n\n\ninclude_files=%s\n\n\n" % include_files)
+
+    return include_files
 
 
 @app.task(name='Finalize Export Provider Task', base=LockingTask)
