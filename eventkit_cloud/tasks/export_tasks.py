@@ -592,9 +592,9 @@ def zip_export_provider(self, result=None, job_name=None, export_provider_task_u
     include_files = sorted(list(set(include_files)))
     if include_files:
         logger.debug("Zipping files: {0}".format(include_files))
-        zip_file = zip_file_task.run(run_uid=run_uid, include_files=include_files,
-                                     file_name=os.path.join(stage_dir, "{0}.zip".format(normalize_job_name(job_name))),
-                                     adhoc=True, static_files=get_style_files()).get('result')
+        #zip_file = zip_file_task.run(run_uid=run_uid, include_files=include_files,
+        #                             file_name=os.path.join(stage_dir, "{0}.zip".format(normalize_job_name(job_name))),
+        #                             adhoc=True, static_files=get_style_files()).get('result')
     else:
         raise Exception("There are no files in this provider available to zip.")
     if not zip_file:
@@ -733,7 +733,8 @@ def include_zipfile(run_uid=None, provider_tasks=[], extra_files=[]):
         include_files.extend(extra_files)
         include_files = list(set(include_files))
         if include_files:
-            zip_file_task.run(run_uid=run_uid, include_files=include_files)
+            #zip_file_task.run(run_uid=run_uid, include_files=include_files)
+            print
         else:
             logger.warn('No files to zip for run_uid/provider_tasks: {}/{}'.format(run_uid, provider_tasks))
 
@@ -864,15 +865,15 @@ def example_finalize_run_hook_task(self, new_zip_filepaths=[], run_uid=None):
 @app.task(name="QGIS Project file (.qgs)", base=FinalizeRunHookTask, bind=True, abort_on_error=False)
 def create_style_task(self, new_zip_filepaths=[], run_uid=None):
     """
-    Task to create styles for osm.
+    Task to create QGIS project file with styles for osm.
     """
     from eventkit_cloud.tasks.models import ExportRun
     run = ExportRun.objects.get(uid=run_uid)
     stage_dir = os.path.join(settings.EXPORT_STAGING_ROOT, str(run_uid))
-    input_gpkg = "test.gpkg"
-    
-    job_name = "test"
-    provider_name = "test"
+
+    job_name = run.job.name.lower()
+    provider_name = run.provider_tasks.all()[0].name
+
     gpkg_file = '{}.gpkg'.format(job_name)
     style_file = os.path.join(stage_dir, '{0}-osm-{1}.qgs'.format(job_name,
                                                                   timezone.now().strftime("%Y%m%d")))
@@ -906,7 +907,7 @@ def prepare_for_export_zip_task(extra_files, run_uid=None):
                 for export_task in provider_task.tasks.all():
                     try:
                         filename = export_task.result.filename
-                    except Exception:
+                    except Exception as e:
                         continue
                     full_file_path = os.path.join(settings.EXPORT_STAGING_ROOT, str(run_uid),
                                                   provider_task.slug, filename)
@@ -918,12 +919,15 @@ def prepare_for_export_zip_task(extra_files, run_uid=None):
         # Need to remove duplicates from the list because
         # some intermediate tasks produce files with the same name.
         include_files = set(include_files)
-        logger.error("\n\ninclude_files in prepare_for_export_zip_task = %s\n\n" % str(include_files))
-
+        logger.error("\n\n\ninclude_files=%s\n\n\n" % include_files)
+        return include_files
+        """
         if include_files:
-            zip_file_task.run(run_uid=run_uid, include_files=include_files)
+            #zip_file_task.run(run_uid=run_uid, include_files=include_files)
+            print
         else:
             logger.warn('No files to zip for run_uid: {}'.format(run_uid))
+        """
 
 
 @app.task(name='Finalize Export Provider Task', base=LockingTask)
