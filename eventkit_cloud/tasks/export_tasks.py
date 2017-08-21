@@ -895,7 +895,7 @@ def prepare_for_export_zip_task(extra_files, run_uid=None):
     from eventkit_cloud.tasks.models import ExportRun
     run = ExportRun.objects.get(uid=run_uid)
 
-    if True:
+    if run.job.include_zipfile:
         # To prepare for the zipfile task, the files need to be checked to ensure they weren't
         # deleted during cancellation.
         include_files = list(extra_files)
