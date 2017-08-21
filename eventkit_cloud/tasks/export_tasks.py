@@ -592,9 +592,9 @@ def zip_export_provider(self, result=None, job_name=None, export_provider_task_u
     include_files = sorted(list(set(include_files)))
     if include_files:
         logger.debug("Zipping files: {0}".format(include_files))
-        #zip_file = zip_file_task.run(run_uid=run_uid, include_files=include_files,
-        #                             file_name=os.path.join(stage_dir, "{0}.zip".format(normalize_job_name(job_name))),
-        #                             adhoc=True, static_files=get_style_files()).get('result')
+        zip_file = zip_file_task.run(run_uid=run_uid, include_files=include_files,
+                                     file_name=os.path.join(stage_dir, "{0}.zip".format(normalize_job_name(job_name))),
+                                     adhoc=True, static_files=get_style_files()).get('result')
     else:
         raise Exception("There are no files in this provider available to zip.")
     if not zip_file:
